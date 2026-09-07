@@ -311,6 +311,9 @@ def bollinger(px: pd.Series, window: int = 20, k: float = 2.0) -> dict:
 # ---------------------------------------------------------------- 전체 실행
 def build_snapshot(raw: dict[str, pd.Series]) -> dict:
     """수집된 원자료로 모든 그래프 데이터를 계산한다."""
+    # 어떤 지표가 샘플로 대체됐는지는 데이터가 아니므로 분리해 둔다.
+    sampled = raw.pop("_sampled", []) if isinstance(raw.get("_sampled"), list) else []
+
     px = raw["usdkrw"]
     m_px = monthly(px)
     months = config.FORECAST_MONTHS
@@ -327,6 +330,7 @@ def build_snapshot(raw: dict[str, pd.Series]) -> dict:
             "latest": round(latest, 2),
             "change_pct": change_pct,
             "history_months": len(m_px),
+            "sampled_indicators": sampled,
         },
         # --- 개인용 ---
         "history": {
