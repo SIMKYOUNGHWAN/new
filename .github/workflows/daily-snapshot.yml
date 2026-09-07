@@ -1,0 +1,43 @@
+name: 일간 스냅샷 갱신
+
+on:
+  schedule:
+    - cron: "0 0 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snapshot
+  cancel-in-progress: false
+
+jobs:
+  build-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: 의존성 설치
+        run: pip install -r requirements.txt
+      - name: 배치 실행
+        env:
+          FX_USE_SAMPLE: ${{ vars.FX_USE_SAMPLE || 'true' }}
+          ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python -m app.pipeline --force
+      - name: 스냅샷 커밋
+        run: |
+          if git diff --quiet -- data/snapshot.json; then
+            echo "변경 없음 - 커밋을 건너뜁니다."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/snapshot.json data/snapshot_backup.json
+          git commit -m "chore: 스냅샷 갱신 $(date -u +'%Y-%m-%d')"
+          git push
