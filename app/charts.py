@@ -19,7 +19,7 @@ C = {
 def _base(fig: go.Figure, height: int = 260, legend: bool = False) -> go.Figure:
     fig.update_layout(
         height=height,
-        margin=dict(l=8, r=20 if legend else 8, t=30 if legend else 8, b=8),
+        margin=dict(l=8, r=28, t=30 if legend else 8, b=8),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(color="#8CA0B4", size=11),
@@ -173,7 +173,9 @@ def backtest(d: dict) -> go.Figure:
         textfont=dict(size=10),
     ))
     fig.update_xaxes(title_text="RMSE (낮을수록 정확)", title_font=dict(size=10))
-    return _base(fig, height=240)
+    fig.update_yaxes(type="category", tickmode="array",
+                     tickvals=d["labels"], nticks=0)
+    return _base(fig, height=max(240, 34 * len(d["labels"])))
 
 
 def importance(d: dict) -> go.Figure:
@@ -186,7 +188,10 @@ def importance(d: dict) -> go.Figure:
         textfont=dict(size=10),
     ))
     fig.update_xaxes(range=[0, 100], ticksuffix="%")
-    return _base(fig, height=220)
+    # 가로 막대에서는 모든 항목명이 보여야 한다(기본 nticks 로는 잘린다).
+    fig.update_yaxes(type="category", tickmode="array",
+                     tickvals=[k for k, _ in items], nticks=0)
+    return _base(fig, height=max(220, 34 * len(items)))
 
 
 def heatmap(d: dict) -> go.Figure:
@@ -234,3 +239,82 @@ def events(hist: dict, marks=(2, 5, 8)) -> go.Figure:
         marker=dict(color=C["expert"], size=9, line=dict(color="#0B1420", width=2)),
     ))
     return _base(fig, height=220)
+
+
+# ---------------------------------------------------------------- 방향 예측
+def proba_history(d: dict) -> go.Figure:
+    """모델별 상승확률 추이. 50% 기준선을 함께 그린다."""
+    palette = {"LightGBM": C["personal"], "로지스틱 회귀": C["expert"]}
+    fig = go.Figure()
+    for name, h in d["history"].items():
+        fig.add_trace(go.Scatter(
+            x=h["labels"], y=h["proba"], name=name, mode="lines",
+            line=dict(color=palette.get(name, C["faint"]), width=1.8),
+        ))
+    fig.add_hline(y=50, line=dict(color=C["faint"], width=1, dash="dot"))
+    fig.update_yaxes(range=[0, 100], ticksuffix="%")
+    return _base(fig, height=220, legend=True)
+
+
+def confusion(m: dict) -> go.Figure:
+    """혼동행렬. 대각선이 맞힌 경우다."""
+    c = m["confusion"]
+    z = [[c["tn"], c["fp"]], [c["fn"], c["tp"]]]
+    fig = go.Figure(go.Heatmap(
+        z=z, x=["하락 예측", "상승 예측"], y=["실제 하락", "실제 상승"],
+        colorscale=[[0, "#1B2A3A"], [1, C["personal"]]],
+        text=[[str(v) for v in row] for row in z],
+        texttemplate="%{text}", textfont=dict(size=14),
+        showscale=False,
+    ))
+    return _base(fig, height=220)
+
+
+def model_compare(metrics: dict) -> go.Figure:
+    """적중률을 기준선과 나란히 놓아야 우위 여부가 보인다."""
+    names = list(metrics.keys())
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=names, y=[metrics[n]["accuracy"] for n in names], name="적중률",
+        marker_color=C["personal"],
+        text=[f"{metrics[n]['accuracy']}%" for n in names],
+        textposition="outside", textfont=dict(size=10),
+    ))
+    fig.add_trace(go.Bar(
+        x=names, y=[metrics[n]["balanced_accuracy"] for n in names],
+        name="균형 정확도", marker_color=C["expert"],
+    ))
+    fig.add_trace(go.Bar(
+        x=names, y=[metrics[n]["baseline"] for n in names],
+        name="기준선", marker_color=C["faint"],
+    ))
+    fig.update_layout(barmode="group")
+    fig.update_yaxes(range=[0, 100], ticksuffix="%")
+    return _base(fig, height=240, legend=True)
+
+
+def tracking_history(t: dict) -> go.Figure:
+    """기록된 예측과 실제값 대조."""
+    rec = [r for r in t.get("recent", []) if r.get("forecast") is not None]
+    if not rec:
+        return _base(go.Figure(), height=200)
+
+    x = [r["date"] for r in rec]
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=x, y=[r["spot"] for r in rec], name="예측 시점 환율",
+        mode="lines+markers", line=dict(color=C["neutral"], width=1.8),
+        marker=dict(size=5),
+    ))
+    fig.add_trace(go.Scatter(
+        x=x, y=[r["forecast"] for r in rec], name="1개월 예측",
+        mode="lines+markers", line=dict(color=C["expert"], width=1.8, dash="dash"),
+        marker=dict(size=5),
+    ))
+    actual = [r.get("actual") for r in rec]
+    if any(a is not None for a in actual):
+        fig.add_trace(go.Scatter(
+            x=x, y=actual, name="실제값", mode="markers",
+            marker=dict(color=C["personal"], size=8, symbol="diamond"),
+        ))
+    return _base(fig, height=220, legend=True)
