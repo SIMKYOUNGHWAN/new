@@ -123,6 +123,36 @@ with c2:
     label("변동성 지표 (이동평균·밴드)", "P-03", "20일 이동평균과 ±2 표준편차 밴드입니다.")
     show(charts.bollinger(snap["bollinger"]), "p03")
 
+# ---- P-05 1개월 방향 예측 ----
+d = snap.get("direction", {})
+label("1개월 방향 예측", "P-05",
+      "향후 약 1개월 뒤 환율이 오를지 내릴지의 확률입니다.")
+
+if not d.get("available"):
+    st.info(f"방향 예측을 사용할 수 없습니다: {d.get('reason', '원인 미상')}")
+else:
+    best = d["metrics"][d["best_model"]]
+    p1, p2, p3 = st.columns(3)
+    p1.metric("상승 확률", f"{d['up_probability']}%")
+    p2.metric("하락 확률", f"{d['down_probability']}%")
+    p3.metric("적중률 (검증)", f"{best['accuracy']}%",
+              f"기준선 대비 {best['edge']:+.1f}%p")
+
+    if lv := d.get("level_1m"):
+        st.markdown(
+            f'<div class="note">1개월 후 수치 전망 — 중앙값 '
+            f'<b>{lv["median"]:,.0f}원</b> · 90% 구간 '
+            f'{lv["lower"]:,.0f} ~ {lv["upper"]:,.0f}원</div>',
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        f'<div class="band">사용 모델 <b>{d["best_model"]}</b> · '
+        f'검증 표본 {best["n_samples"]}건 · 균형 정확도 {best["balanced_accuracy"]}%<br>'
+        f'{d["caveat"]}</div>',
+        unsafe_allow_html=True,
+    )
+
 # ---------------------------------------------------------------- 전문가용
 st.markdown("---")
 st.subheader("전문가용 — 심화 분석")
@@ -196,7 +226,81 @@ with st.expander("03 · 리스크·구조 분석", expanded=False):
           "월별 변동분을 회귀 기여도로 나눈 스택 그래프입니다.")
     show(charts.decomposition(snap["decomposition"]), "e18")
 
-with st.expander("04 · 데이터 현황 및 모델 추적", expanded=False):
+with st.expander("04 · 방향 예측 모델 상세", expanded=False):
+    if not d.get("available"):
+        st.info(f"방향 예측을 사용할 수 없습니다: {d.get('reason', '원인 미상')}")
+    else:
+        st.markdown(
+            '<div class="band">적중률은 <b>기준선</b>과 함께 읽어야 합니다. '
+            "기준선은 다수 클래스만 계속 찍었을 때의 적중률이라, 이를 넘지 못하면 "
+            "예측력이 없는 것입니다. 상승·하락 표본이 불균형할 때는 균형 정확도가 "
+            "더 정직한 지표입니다.</div>",
+            unsafe_allow_html=True,
+        )
+        a, b = st.columns(2)
+        with a:
+            label("모델별 성능 비교", "E-21",
+                  "적중률·균형정확도·기준선을 나란히 놓았습니다.")
+            show(charts.model_compare(d["metrics"]), "e21")
+            label("기여변수 Top 6", "E-22",
+                  "이번 예측에서 비중이 컸던 지표입니다.")
+            show(charts.importance({"importance": dict(zip(
+                d["importance"]["labels"],
+                [v / 100 for v in d["importance"]["values"]]))}), "e22")
+        with b:
+            label("상승확률 추이", "E-23",
+                  "walk-forward 검증 구간의 모델별 상승확률입니다.")
+            show(charts.proba_history(d), "e23")
+            best = d["metrics"][d["best_model"]]
+            label("혼동행렬", "E-24",
+                  f"{d['best_model']} 기준 · 대각선이 맞힌 경우입니다.")
+            show(charts.confusion(best), "e24")
+
+        rows = {
+            "모델": [], "적중률": [], "기준선": [],
+            "균형정확도": [], "우위": [], "상승재현율": [], "하락재현율": [],
+        }
+        for name, m in d["metrics"].items():
+            rows["모델"].append(name)
+            rows["적중률"].append(f"{m['accuracy']}%")
+            rows["기준선"].append(f"{m['baseline']}%")
+            rows["균형정확도"].append(f"{m['balanced_accuracy']}%")
+            rows["우위"].append(f"{m['edge']:+.1f}%p")
+            rows["상승재현율"].append(f"{m['recall_up']}%")
+            rows["하락재현율"].append(f"{m['recall_down']}%")
+        st.dataframe(rows, hide_index=True, width="stretch")
+        st.caption(
+            f"검증 방식: walk-forward (과거로 학습 → 미래 예측 → 이동). "
+            f"실제 상승 비율 {list(d['metrics'].values())[0]['actual_up_rate']}%. "
+            "우위가 음수면 그 모델은 기준선보다 못합니다."
+        )
+
+with st.expander("05 · 예측 이력 추적", expanded=False):
+    t = snap.get("tracking", {})
+    if not t.get("total"):
+        st.info("아직 기록된 예측이 없습니다. 배치가 실행될 때마다 쌓입니다.")
+    else:
+        k1, k2, k3, k4 = st.columns(4)
+        k1.metric("기록된 예측", f"{t['total']}건")
+        k2.metric("채점 완료", f"{t['scored']}건")
+        k3.metric("방향 적중률",
+                  f"{t['direction_hit_rate']}%" if t.get("direction_hit_rate")
+                  is not None else "집계 전")
+        k4.metric("밴드 적중률",
+                  f"{t['band_coverage']}%" if t.get("band_coverage")
+                  is not None else "집계 전")
+
+        label("예측 대 실제", "E-25", "기록된 예측과 실제값을 대조합니다.")
+        if t["total"] < 2:
+            st.info(
+                "기록이 1건뿐이라 아직 추이를 그릴 수 없습니다. "
+                "배치가 며칠 더 실행되면 그래프가 나타납니다."
+            )
+        else:
+            show(charts.tracking_history(t), "e25")
+        st.caption(t.get("note", ""))
+
+with st.expander("06 · 데이터 현황 및 모델 추적", expanded=False):
     a, b = st.columns(2)
     with a:
         st.markdown("**최신 지표 (스냅샷 기준)**")
@@ -228,8 +332,15 @@ with st.expander("04 · 데이터 현황 및 모델 추적", expanded=False):
         )
 
 st.markdown("---")
+with st.expander("방법론 · 가정과 한계", expanded=False):
+    _method = config.BASE_DIR / "METHODOLOGY.md"
+    if _method.exists():
+        st.markdown(_method.read_text(encoding="utf-8"))
+    else:
+        st.info("METHODOLOGY.md 를 찾을 수 없습니다.")
+
 st.caption(
-    "데이터 출처(예시): 한국은행 경제통계시스템, FRED. "
-    "현재 수치는 샘플이며 공개 전 출처·갱신 주기·모델 가정을 문서화해야 합니다. "
-    "본 페이지는 투자 자문이 아닙니다."
+    "데이터 출처: 한국은행 경제통계시스템, FRED. "
+    "경상수지·자본유출입·CDS·내재변동성·감성지수는 아직 샘플 데이터입니다. "
+    "모델의 가정과 한계는 위 방법론을 참고하세요. 본 페이지는 투자 자문이 아닙니다."
 )
