@@ -369,6 +369,44 @@ with st.expander("06 · 데이터 현황 및 모델 추적", expanded=False):
         )
 
 st.markdown("---")
+
+# ---------------------------------------------------------------- 참고 뉴스
+_news = snap.get("news", {})
+st.subheader("참고 뉴스")
+if not _news.get("available"):
+    st.caption(
+        "표시할 뉴스가 없습니다. "
+        f"({_news.get('reason', '수집되지 않음')})"
+    )
+else:
+    st.markdown(
+        '<p class="note">환율 관련 키워드가 제목에 포함된 최근 기사입니다. '
+        '<b>기사와 환율 움직임 사이에 인과관계가 있다는 뜻은 아닙니다.</b> '
+        '제목을 누르면 원문으로 이동합니다.</p>',
+        unsafe_allow_html=True,
+    )
+    left, right = st.columns(2)
+    for i, item in enumerate(_news["items"]):
+        with (left if i % 2 == 0 else right):
+            when = f' · {item["published"]}' if item.get("published") else ""
+            st.markdown(
+                f'<div style="background:#121E2C;border:1px solid #22364B;'
+                f'border-radius:4px;padding:10px 13px;margin-bottom:8px;">'
+                f'<a href="{item["link"]}" target="_blank" '
+                f'style="color:#E8EEF4;text-decoration:none;font-size:13px;'
+                f'line-height:1.5;">{item["title"]}</a>'
+                f'<div style="color:#5C7188;font-size:11px;margin-top:5px;">'
+                f'{item["source"]}{when}</div></div>',
+                unsafe_allow_html=True,
+            )
+    st.caption(
+        f"수집 시각 {_news.get('collected_at', '—')} · "
+        f"출처 {', '.join(_news.get('sources_ok', [])) or '없음'}"
+        + (f" · 실패 {', '.join(_news['sources_failed'])}"
+           if _news.get("sources_failed") else "")
+    )
+
+st.markdown("---")
 with st.expander("방법론 · 가정과 한계", expanded=False):
     _method = config.BASE_DIR / "METHODOLOGY.md"
     if _method.exists():
