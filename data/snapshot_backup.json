@@ -1677,10 +1677,10 @@
   "note": "값이 낮을수록 예측 오차가 작습니다."
  },
  "meta": {
-  "generated_at": "2026-09-07T08:44:06.398722+09:00",
-  "generated_at_display": "2026-09-07 08:44 KST",
+  "generated_at": "2026-09-07T08:46:36.230370+09:00",
+  "generated_at_display": "2026-09-07 08:46 KST",
   "mode": "sample",
-  "elapsed_sec": 0.15,
+  "elapsed_sec": 0.12,
   "forecast_months": 12,
   "mc_simulations": 5000
  }
