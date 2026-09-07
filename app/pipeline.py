@@ -15,7 +15,7 @@ import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from . import analytics, config, sources, tracking
+from . import analytics, config, news, sources, tracking
 
 log = logging.getLogger(__name__)
 
@@ -43,6 +43,13 @@ def run_batch(force: bool = False) -> dict:
     except Exception:
         log.exception("예측 이력 기록 실패 - 배치는 계속합니다.")
         snapshot["tracking"] = {"total": 0, "scored": 0, "pending": 0}
+
+    # 뉴스는 부가 정보다. 실패해도 배치를 막지 않는다.
+    try:
+        snapshot["news"] = news.collect()
+    except Exception as exc:
+        log.warning("뉴스 수집 실패: %s", exc)
+        snapshot["news"] = {"available": False, "reason": str(exc), "items": []}
 
     snapshot["meta"] = {
         "generated_at": now.isoformat(),
