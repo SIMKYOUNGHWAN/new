@@ -322,7 +322,7 @@ def build_snapshot(raw: dict[str, pd.Series]) -> dict:
     kr, us = monthly(raw["kr_rate"]), monthly(raw["us_rate"])
     gap = (kr - us).dropna().tail(24)
 
-    return {
+    snap = {
         "summary": {
             "latest": round(latest, 2),
             "change_pct": change_pct,
@@ -377,3 +377,13 @@ def build_snapshot(raw: dict[str, pd.Series]) -> dict:
         "correlations": correlations(raw),
         "backtest": backtest(px),
     }
+
+    # 방향 예측은 실패해도 배치 전체를 막지 않는다.
+    try:
+        from . import direction
+        snap["direction"] = direction.build_direction(raw, snap["monte_carlo"])
+    except Exception as exc:
+        log.warning("방향 예측 실패: %s", exc)
+        snap["direction"] = {"available": False, "reason": str(exc)}
+
+    return snap
