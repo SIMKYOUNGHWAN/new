@@ -99,6 +99,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# 일부 지표만 실패했을 때 조용히 샘플이 섞이면 오해를 부른다. 명시한다.
+_sampled = summary.get("sampled_indicators") or []
+if _sampled and meta["mode"] == "live":
+    st.warning(
+        "다음 지표는 이번 갱신에서 조회에 실패해 **샘플 데이터**로 표시됩니다: "
+        + ", ".join(_sampled)
+    )
+
 # ---------------------------------------------------------------- 개인용
 st.markdown("---")
 st.subheader("개인용 — 핵심 요약")
@@ -184,15 +192,18 @@ with st.expander("01 · 거시경제 지표", expanded=False):
 with st.expander("02 · 심화 모델링", expanded=False):
     a, b = st.columns(2)
     with a:
-        label("옵션시장 내재변동성(IV)", "E-05")
+        label("실현변동성 (20일·연율화)", "E-05",
+              "옵션 내재변동성은 유료 데이터라 환율의 실현변동성으로 대체했습니다.")
         show(charts.simple_line(snap["implied_vol"], charts.C["risk"], fill=True), "e05")
-        label("국채금리 스프레드 · CDS", "E-07")
+        label("신용 스프레드 (회사채AA− − 국고채3년)", "E-07",
+              "CDS 는 유료 데이터라 국내 신용 스프레드로 대체했습니다. 단위 bp.")
         show(charts.simple_line(snap["cds"], charts.C["expert"]), "e07")
         label("몬테카를로 시뮬레이션 밴드", "E-09",
               f"{snap['monte_carlo']['n_sims']:,}개 경로의 5·25·50·75·95 분위입니다.")
         show(charts.monte_carlo(snap["monte_carlo"]), "e09")
     with b:
-        label("뉴스·소셜 감성지수", "E-06")
+        label("시장심리 지수 (VIX 기반)", "E-06",
+              "VIX 를 표준화해 부호를 뒤집었습니다. 음수일수록 위험회피 심리입니다.")
         show(charts.signed_bar(snap["sentiment"]), "e06")
         label("GARCH 기반 변동성 예측", "E-08",
               f"적합 모델: {snap['garch']['method']}")
@@ -218,7 +229,7 @@ with st.expander("03 · 리스크·구조 분석", expanded=False):
         label("머신러닝 특징중요도", "E-14",
               "단위가 다른 요인을 비교하기 위해 표준화 계수 기준 상대 기여도로 계산했습니다.")
         show(charts.importance(snap["decomposition"]), "e14")
-        label("캐리트레이드 지표", "E-16")
+        label("한미 금리차 (일별)", "E-16")
         show(charts.simple_line(snap["carry"], charts.C["personal"]), "e16")
     with b:
         label("베이지안(BSTS) 신뢰구간", "E-13",
@@ -332,13 +343,13 @@ with st.expander("06 · 데이터 현황 및 모델 추적", expanded=False):
         st.markdown("**최신 지표 (스냅샷 기준)**")
         st.dataframe(
             {
-                "지표": ["USD/KRW", "달러인덱스", "한미 금리차", "내재변동성", "CDS 프리미엄"],
+                "지표": ["USD/KRW", "달러인덱스", "한미 금리차", "실현변동성", "신용 스프레드"],
                 "값": [
                     f"{summary['latest']:,.2f}",
                     f"{snap['dxy']['values'][-1]:,.2f}",
                     f"{snap['rate_gap']['values'][-1]:+.2f}%",
                     f"{snap['implied_vol']['values'][-1]:.2f}%",
-                    f"{snap['cds']['values'][-1]:.1f}bp",
+                    f"{snap['cds']['values'][-1]:.0f}bp",
                 ],
             },
             hide_index=True, width="stretch",
@@ -366,7 +377,8 @@ with st.expander("방법론 · 가정과 한계", expanded=False):
         st.info("METHODOLOGY.md 를 찾을 수 없습니다.")
 
 st.caption(
-    "데이터 출처: 한국은행 경제통계시스템, FRED. "
-    "경상수지·자본유출입·CDS·내재변동성·감성지수는 아직 샘플 데이터입니다. "
+    "데이터 출처: 한국은행 경제통계시스템(ECOS), FRED. "
+    "옵션 내재변동성·CDS·뉴스 감성지수는 유료 또는 미공개 데이터라 각각 "
+    "실현변동성·신용 스프레드·VIX 기반 지표로 대체했습니다. "
     "모델의 가정과 한계는 위 방법론을 참고하세요. 본 페이지는 투자 자문이 아닙니다."
 )
