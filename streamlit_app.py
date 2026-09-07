@@ -146,10 +146,17 @@ else:
             unsafe_allow_html=True,
         )
 
+    cal_line = ""
+    if d.get("calibrated"):
+        cal_line = (
+            f'확률 보정 적용 (Platt scaling) · 보정 전 원값 '
+            f'{d["raw_up_probability"]}% → 보정 후 {d["up_probability"]}%<br>'
+        )
+
     st.markdown(
         f'<div class="band">사용 모델 <b>{d["best_model"]}</b> · '
         f'검증 표본 {best["n_samples"]}건 · 균형 정확도 {best["balanced_accuracy"]}%<br>'
-        f'{d["caveat"]}</div>',
+        f'{cal_line}{d["caveat"]}</div>',
         unsafe_allow_html=True,
     )
 
@@ -274,6 +281,25 @@ with st.expander("04 · 방향 예측 모델 상세", expanded=False):
             f"실제 상승 비율 {list(d['metrics'].values())[0]['actual_up_rate']}%. "
             "우위가 음수면 그 모델은 기준선보다 못합니다."
         )
+
+        cal = d.get("calibration", {})
+        if cal.get("before", {}).get("predicted"):
+            label("확률 보정 (신뢰도 곡선)", "E-26",
+                  "예측 확률 구간별로 실제 상승 비율을 센 것입니다. "
+                  "점선(대각선)에 가까울수록 확률을 그대로 믿을 수 있습니다.")
+            g1, g2 = st.columns([2, 1])
+            with g1:
+                show(charts.reliability_curve(cal), "e26")
+            with g2:
+                b_err = cal["before"].get("calibration_error")
+                a_err = cal["after"].get("calibration_error")
+                st.metric("보정 전 오차", f"{b_err}%p" if b_err is not None else "—")
+                st.metric("보정 후 오차", f"{a_err}%p" if a_err is not None else "—",
+                          f"{a_err - b_err:+.1f}%p"
+                          if (a_err is not None and b_err is not None) else None,
+                          delta_color="inverse")
+                st.caption(f"방식: {cal.get('method', '미적용')}")
+            st.caption(cal.get("note", ""))
 
 with st.expander("05 · 예측 이력 추적", expanded=False):
     t = snap.get("tracking", {})
