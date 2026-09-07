@@ -2741,11 +2741,99 @@
   ],
   "note": "예측 시점부터 30일이 지난 건만 채점합니다. 90% 밴드라면 적중 구간 비율이 90% 근처여야 정상입니다."
  },
+ "news": {
+  "available": true,
+  "items": [
+   {
+    "title": "우리금융 외국인 지분율, 사상 첫 50% 돌파…꾸준히 사들이는 이유는",
+    "source": "매일경제 경제",
+    "link": "https://www.mk.co.kr/news/economy/12146570",
+    "published": "2026-09-07 22:19"
+   },
+   {
+    "title": "美 '엔저 시정 압박' 통했나…6개월만에 달러당 154엔대로 하락(종합)",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260907072651073",
+    "published": "2026-09-07 21:17"
+   },
+   {
+    "title": "원화값 두 달새 200원 치솟자 … 국민연금 환헤지 중단",
+    "source": "매일경제 경제",
+    "link": "https://www.mk.co.kr/news/economy/12146455",
+    "published": "2026-09-07 18:01"
+   },
+   {
+    "title": "[표] 외국환율고시표",
+    "source": "매일경제 경제",
+    "link": "https://www.mk.co.kr/news/economy/12146337",
+    "published": "2026-09-07 17:38"
+   },
+   {
+    "title": "정부가 대주주던 우리금융 … 외국인 지분 50% 넘어섰다",
+    "source": "매일경제 경제",
+    "link": "https://www.mk.co.kr/news/economy/12146334",
+    "published": "2026-09-07 17:38"
+   },
+   {
+    "title": "“수출 그대로인데 실적 확 깎인다고?”…환율 급락이 만든 삼전 ‘5조원 충격’",
+    "source": "매일경제 경제",
+    "link": "https://www.mk.co.kr/news/economy/12146298",
+    "published": "2026-09-07 17:22"
+   },
+   {
+    "title": "약 2년만에 환율 1,330원대…국민연금 환헤지 중단에 낙폭 반납",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260907123600002",
+    "published": "2026-09-07 16:00"
+   },
+   {
+    "title": "[외환] 원/달러 환율 9.9원 내린 1,340.5원(15:30 기준가)",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260907118200002",
+    "published": "2026-09-07 15:30"
+   },
+   {
+    "title": "中, 60조원 규모 특별국채 발행…국유 금융사 자본확충 지원",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260907115000083",
+    "published": "2026-09-07 15:26"
+   },
+   {
+    "title": "부산은행, 주요 영업점에 외국인 서포터즈 배치",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260907106500051",
+    "published": "2026-09-07 14:46"
+   },
+   {
+    "title": "미래에셋운용, S&P500·美단기국채 50%씩 담은 ETF 8일 상장",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260907084000008",
+    "published": "2026-09-07 13:00"
+   },
+   {
+    "title": "美 '엔저 시정 압박' 통했나…달러당 150엔대 초반 전망도",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260907072600073",
+    "published": "2026-09-07 11:23"
+   }
+  ],
+  "collected_at": "2026-09-08 03:29",
+  "sources_ok": [
+   "연합뉴스 경제(7)",
+   "한국경제(0)",
+   "매일경제 경제(7)"
+  ],
+  "sources_failed": [
+   "이데일리 경제"
+  ],
+  "reason": "",
+  "note": "환율 관련 키워드가 제목에 포함된 기사만 모았습니다. 기사와 환율 움직임 사이에 인과관계가 있다는 뜻은 아닙니다."
+ },
  "meta": {
-  "generated_at": "2026-09-08T03:09:31.726161+09:00",
-  "generated_at_display": "2026-09-08 03:09 KST",
+  "generated_at": "2026-09-08T03:28:54.765805+09:00",
+  "generated_at_display": "2026-09-08 03:28 KST",
   "mode": "live",
-  "elapsed_sec": 10.19,
+  "elapsed_sec": 13.68,
   "forecast_months": 12,
   "mc_simulations": 5000
  }
