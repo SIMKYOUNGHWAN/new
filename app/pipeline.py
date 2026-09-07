@@ -15,7 +15,7 @@ import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from . import analytics, config, sources
+from . import analytics, config, sources, tracking
 
 log = logging.getLogger(__name__)
 
@@ -35,6 +35,14 @@ def run_batch(force: bool = False) -> dict:
 
     snapshot = analytics.build_snapshot(raw)
     elapsed = time.perf_counter() - started
+
+    # 예측 이력 기록 후 요약을 스냅샷에 실어 보낸다.
+    try:
+        tracking.record(snapshot)
+        snapshot["tracking"] = tracking.summary()
+    except Exception:
+        log.exception("예측 이력 기록 실패 - 배치는 계속합니다.")
+        snapshot["tracking"] = {"total": 0, "scored": 0, "pending": 0}
 
     snapshot["meta"] = {
         "generated_at": now.isoformat(),
