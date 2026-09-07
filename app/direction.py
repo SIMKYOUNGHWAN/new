@@ -187,6 +187,79 @@ def walk_forward(X: pd.DataFrame, y: pd.Series, model_fn,
     return np.array(probas), np.array(actuals), dates
 
 
+# ---------------------------------------------------------------- 확률 보정
+class PlattCalibrator:
+    """Platt scaling. 원 확률의 로짓에 1차원 로지스틱을 다시 적합한다.
+
+    트리 모델은 확률을 0 또는 1 쪽으로 과하게 밀어내는 경향이 있다.
+    walk-forward 로 얻은 out-of-fold 확률로 보정하므로 정보 누수가 없다.
+    표본이 수백 건 수준이라 isotonic 대신 Platt 을 쓴다 — isotonic 은
+    이 크기에서 과적합한다.
+    """
+
+    def __init__(self):
+        self.model = None
+
+    @staticmethod
+    def _logit(p: np.ndarray) -> np.ndarray:
+        p = np.clip(p, 1e-6, 1 - 1e-6)
+        return np.log(p / (1 - p)).reshape(-1, 1)
+
+    def fit(self, proba: np.ndarray, actual: np.ndarray) -> "PlattCalibrator":
+        if len(np.unique(actual)) < 2 or len(proba) < 40:
+            return self          # 보정을 신뢰할 수 없으면 그대로 둔다
+        try:
+            m = LogisticRegression(max_iter=1000)
+            m.fit(self._logit(proba), actual)
+            self.model = m
+        except Exception as exc:                        # pragma: no cover
+            log.warning("확률 보정 적합 실패: %s", exc)
+        return self
+
+    def transform(self, proba: np.ndarray) -> np.ndarray:
+        if self.model is None:
+            return proba
+        return self.model.predict_proba(self._logit(proba))[:, 1]
+
+    @property
+    def fitted(self) -> bool:
+        return self.model is not None
+
+
+def reliability(proba: np.ndarray, actual: np.ndarray, bins: int = 5) -> dict:
+    """신뢰도 곡선. 예측 확률 구간별 실제 상승 비율을 센다.
+
+    잘 보정된 모델이라면 '상승확률 30%' 구간에서 실제로 30% 정도가
+    상승해야 한다. 대각선에서 멀수록 확률을 그대로 믿기 어렵다.
+    """
+    edges = np.linspace(0, 1, bins + 1)
+    pred, obs, counts = [], [], []
+
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        m = (proba >= lo) & (proba < hi if hi < 1 else proba <= 1)
+        if m.sum() < 5:
+            continue
+        pred.append(round(float(proba[m].mean()) * 100, 1))
+        obs.append(round(float(actual[m].mean()) * 100, 1))
+        counts.append(int(m.sum()))
+
+    # 평균 절대 보정오차 — 낮을수록 확률을 그대로 믿을 수 있다.
+    if pred:
+        weights = np.array(counts, dtype=float)
+        ece = float(np.average(np.abs(np.array(pred) - np.array(obs)),
+                               weights=weights))
+    else:
+        ece = None
+
+    return {
+        "predicted": pred,
+        "observed": obs,
+        "counts": counts,
+        "calibration_error": round(ece, 1) if ece is not None else None,
+    }
+
+
+
 # ---------------------------------------------------------------- 전체 실행
 def build_direction(raw: dict[str, pd.Series], mc: dict | None = None) -> dict:
     """방향 예측 결과 전체. 실패해도 배치를 막지 않도록 dict 를 반환한다."""
@@ -210,7 +283,7 @@ def build_direction(raw: dict[str, pd.Series], mc: dict | None = None) -> dict:
     if HAS_LGBM:
         models.append(("LightGBM", _fit_lgbm))
 
-    results, history = {}, {}
+    results, history, oof = {}, {}, {}
     for name, fn in models:
         p, a, d = walk_forward(X, y, fn)
         if len(p) == 0:
@@ -222,6 +295,7 @@ def build_direction(raw: dict[str, pd.Series], mc: dict | None = None) -> dict:
             "labels": [x.strftime("%Y-%m-%d") for x in d],
             "proba": np.round(p * 100, 1).tolist(),
         }
+        oof[name] = (p, a)
 
     if not results:
         return {"available": False, "reason": "검증 구간을 만들지 못했습니다"}
@@ -235,10 +309,20 @@ def build_direction(raw: dict[str, pd.Series], mc: dict | None = None) -> dict:
     live_date = live_row.index[0]
     try:
         proba_now, importance = best_fn(X.values, y.values, live_row[cols].values)
-        up_prob = float(proba_now[0])
+        raw_prob = float(proba_now[0])
     except Exception as exc:                            # pragma: no cover
         log.warning("현재 시점 예측 실패: %s", exc)
         return {"available": False, "reason": str(exc)}
+
+    # ---- 확률 보정 ----
+    # 트리 모델은 확률을 0/1 쪽으로 과하게 밀어낸다. walk-forward 에서 얻은
+    # out-of-fold 확률로 보정해야 "상승확률 8%" 같은 과잉 확신이 완화된다.
+    p_oof, a_oof = oof[best_name]
+    calibrator = PlattCalibrator().fit(p_oof, a_oof)
+    up_prob = float(calibrator.transform(np.array([raw_prob]))[0])
+
+    rel_before = reliability(p_oof, a_oof)
+    rel_after = reliability(calibrator.transform(p_oof), a_oof)
 
     imp = np.abs(np.asarray(importance, dtype=float))
     total = imp.sum() or 1.0
@@ -251,6 +335,17 @@ def build_direction(raw: dict[str, pd.Series], mc: dict | None = None) -> dict:
         "best_model": best_name,
         "up_probability": round(up_prob * 100, 1),
         "down_probability": round((1 - up_prob) * 100, 1),
+        "raw_up_probability": round(raw_prob * 100, 1),
+        "calibrated": calibrator.fitted,
+        "calibration": {
+            "before": rel_before,
+            "after": rel_after,
+            "method": "Platt scaling" if calibrator.fitted else "미적용",
+            "note": (
+                "보정 전후의 적중률은 같습니다. 순서를 바꾸지 않고 확률의 "
+                "눈금만 실제 빈도에 맞추기 때문입니다."
+            ),
+        },
         "metrics": results,
         "history": history,
         "importance": {
