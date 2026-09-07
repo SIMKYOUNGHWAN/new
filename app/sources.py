@@ -40,6 +40,25 @@ def fetch_ecos(stat_code: str, item_code: str, start: str, end: str,
     return pd.Series(vals, index=idx).dropna().sort_index()
 
 
+def fetch_ecos_any(candidates: list[tuple[str, str, str]], start: str, end: str,
+                   label: str) -> pd.Series:
+    """여러 (통계표, 항목, 주기) 후보를 차례로 시도해 처음 성공한 것을 쓴다.
+
+    ECOS 는 같은 지표라도 통계표에 따라 항목코드 체계가 달라서
+    (예: 301Y013 은 000000, 301Y017 은 SA000) 후보를 두고 폴백한다.
+    """
+    errors = []
+    for stat, item, cycle in candidates:
+        try:
+            s = fetch_ecos(stat, item, start, end, cycle)
+            if len(s) > 0:
+                log.info("%s: %s/%s (%s) 사용, %d개", label, stat, item, cycle, len(s))
+                return s
+        except Exception as exc:
+            errors.append(f"{stat}/{item}({cycle}): {exc}")
+    raise RuntimeError(f"{label} 조회 실패 — " + " | ".join(errors))
+
+
 def fetch_fred(series_id: str, start: str) -> pd.Series:
     """FRED 시계열 조회. 실패 시 예외를 올린다."""
     if not config.FRED_API_KEY:
@@ -110,8 +129,9 @@ def sample_bundle() -> dict[str, pd.Series]:
 def load_raw() -> dict[str, pd.Series]:
     """설정에 따라 실 API 또는 샘플 데이터를 반환한다.
 
-    실 API 호출이 하나라도 실패하면 전체를 샘플로 대체하지 않고
-    예외를 올려 배치가 이전 스냅샷을 유지하도록 한다.
+    핵심 지표(환율)가 실패하면 예외를 올려 배치가 이전 스냅샷을 유지하게 한다.
+    보조 지표는 개별적으로 실패해도 샘플로 대체하고 계속 진행한다 —
+    지표 하나 때문에 대시보드 전체가 멈추는 편이 더 나쁘다.
     """
     if config.USE_SAMPLE:
         log.info("샘플 데이터 모드로 수집합니다.")
@@ -126,21 +146,87 @@ def load_raw() -> dict[str, pd.Series]:
     fred_start = (end - timedelta(days=365 * 3)).strftime("%Y-%m-%d")
 
     bundle: dict[str, pd.Series] = {}
+    fallback = sample_bundle()
+    sampled: list[str] = []
 
-    # 원/달러 환율 (ECOS 731Y001, 0000001 = 원/미국달러)
+    def _try(key: str, fn, label: str) -> None:
+        """보조 지표용. 실패하면 샘플로 대체하고 기록만 남긴다."""
+        try:
+            s = fn()
+            if len(s) == 0:
+                raise RuntimeError("빈 응답")
+            bundle[key] = s
+        except Exception as exc:
+            log.warning("%s 실패, 샘플로 대체: %s", label, exc)
+            bundle[key] = fallback[key]
+            sampled.append(label)
+
+    # ---- 핵심 지표: 실패하면 배치를 중단한다 ----
     bundle["usdkrw"] = fetch_ecos("731Y001", "0000001", start_d, end_d, "D")
-    # 한국 기준금리 (ECOS 722Y001, 0101000)
     bundle["kr_rate"] = fetch_ecos("722Y001", "0101000", start_m, end_m, "M")
-
-    # 미국 지표는 FRED
     bundle["us_rate"] = fetch_fred("FEDFUNDS", fred_start)
     bundle["dxy"] = fetch_fred("DTWEXBGS", fred_start)
-    bundle["oil"] = fetch_fred("DCOILWTICO", fred_start)
 
-    # 아직 매핑하지 않은 지표는 샘플로 채운다(부분 도입 단계).
-    fallback = sample_bundle()
-    for key in ("trade_bal", "flows", "cds", "implied_vol",
-                "sentiment", "carry", "kospi"):
-        bundle.setdefault(key, fallback[key])
+    # ---- 보조 지표 ----
+    _try("oil", lambda: fetch_fred("DCOILWTICO", fred_start), "유가")
+    _try("kospi", lambda: fetch_ecos("802Y001", "0001000", start_d, end_d, "D"),
+         "코스피")
+
+    # 경상수지 — 통계표에 따라 항목코드 체계가 달라 후보를 둔다.
+    _try("trade_bal", lambda: fetch_ecos_any(
+        [("301Y013", "000000", "M"), ("301Y017", "SA000", "M")],
+        start_m, end_m, "경상수지"), "경상수지")
+
+    # 외국인 자본 유출입 = 증권투자(부채). 양수면 유입, 음수면 유출.
+    _try("flows", lambda: fetch_ecos_any(
+        [("301Y013", "BOPF22000000", "M")],
+        start_m, end_m, "증권투자(부채)"), "자본유출입")
+
+    # CDS 대체 — 회사채(AA-) 와 국고채(3년) 의 신용 스프레드.
+    # 둘 다 원화 기준이라 환율 효과가 섞이지 않고 국내 신용위험만 남는다.
+    def _credit_spread() -> pd.Series:
+        corp = fetch_ecos_any(
+            [("817Y002", "010300000", "D"), ("721Y001", "010300000", "D")],
+            start_d, end_d, "회사채(AA-)")
+        govt = fetch_ecos_any(
+            [("817Y002", "010200000", "D"), ("721Y001", "010200000", "D")],
+            start_d, end_d, "국고채(3년)")
+        # 연% 차이를 bp 로 환산한다.
+        spread = (corp - govt).dropna() * 100
+        if len(spread) == 0:
+            raise RuntimeError("스프레드 계산 결과가 비었습니다")
+        return spread
+
+    _try("cds", _credit_spread, "신용 스프레드")
+
+    # 감성지수 대체 — VIX 를 표준화해 -1~+1 범위로 뒤집는다.
+    # VIX 가 높을수록(공포) 감성은 음수가 되어야 방향이 맞는다.
+    def _sentiment() -> pd.Series:
+        vix = fetch_fred("VIXCLS", fred_start)
+        z = (vix - vix.rolling(120, min_periods=20).mean()) \
+            / vix.rolling(120, min_periods=20).std()
+        return (-z).clip(-3, 3).dropna()
+
+    _try("sentiment", _sentiment, "시장심리(VIX)")
+
+    # 내재변동성 대체 — 환율의 실현변동성(20일, 연율화).
+    def _realized_vol() -> pd.Series:
+        px = bundle["usdkrw"]
+        ret = np.log(px / px.shift(1))
+        return (ret.rolling(20).std() * np.sqrt(252) * 100).dropna()
+
+    _try("implied_vol", _realized_vol, "실현변동성")
+
+    # 캐리 지표 — 한미 금리차를 일별로 펼친다.
+    def _carry() -> pd.Series:
+        kr = bundle["kr_rate"].reindex(bundle["usdkrw"].index).ffill()
+        us = bundle["us_rate"].reindex(bundle["usdkrw"].index).ffill()
+        return (kr - us).dropna()
+
+    _try("carry", _carry, "금리차")
+
+    if sampled:
+        log.warning("샘플로 대체된 지표: %s", ", ".join(sampled))
+    bundle["_sampled"] = sampled          # 화면에 표시하기 위해 함께 넘긴다
 
     return bundle
