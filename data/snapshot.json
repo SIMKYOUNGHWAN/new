@@ -2817,7 +2817,7 @@
     "published": "2026-09-08 11:32"
    }
   ],
-  "collected_at": "2026-09-09 02:18",
+  "collected_at": "2026-09-09 02:32",
   "sources_ok": [
    "연합뉴스 경제(12)",
    "한국경제(2)",
@@ -2830,10 +2830,10 @@
   "note": "환율 관련 키워드가 제목에 포함된 기사만 모았습니다. 기사와 환율 움직임 사이에 인과관계가 있다는 뜻은 아닙니다."
  },
  "meta": {
-  "generated_at": "2026-09-09T02:18:41.050476+09:00",
-  "generated_at_display": "2026-09-09 02:18 KST",
+  "generated_at": "2026-09-09T02:32:35.923947+09:00",
+  "generated_at_display": "2026-09-09 02:32 KST",
   "mode": "live",
-  "elapsed_sec": 12.41,
+  "elapsed_sec": 13.86,
   "forecast_months": 12,
   "mc_simulations": 5000
  }
