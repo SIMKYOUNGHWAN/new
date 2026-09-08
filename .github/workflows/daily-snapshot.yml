@@ -32,12 +32,12 @@ jobs:
         run: python -m app.pipeline --force
       - name: 스냅샷 커밋
         run: |
-          if git diff --quiet -- data/snapshot.json; then
+          if git diff --quiet -- data/snapshot.json data/predictions.json; then
             echo "변경 없음 - 커밋을 건너뜁니다."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/snapshot_backup.json
+          git add data/snapshot.json data/snapshot_backup.json data/predictions.json
           git commit -m "chore: 스냅샷 갱신 $(date -u +'%Y-%m-%d')"
           git push
