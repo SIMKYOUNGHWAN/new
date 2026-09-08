@@ -956,8 +956,6 @@
  },
  "sentiment": {
   "labels": [
-   "2026-07-24",
-   "2026-07-27",
    "2026-07-28",
    "2026-07-29",
    "2026-07-30",
@@ -985,11 +983,11 @@
    "2026-08-31",
    "2026-09-01",
    "2026-09-02",
-   "2026-09-03"
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-07"
   ],
   "values": [
-   0.27,
-   0.25,
    0.38,
    -0.3,
    0.7,
@@ -1017,7 +1015,9 @@
    0.99,
    0.57,
    0.89,
-   1.13
+   1.13,
+   1.06,
+   0.82
   ]
  },
  "cds": {
@@ -1059,7 +1059,7 @@
    67.2,
    72.0,
    67.8,
-   67.5
+   67.4
   ]
  },
  "carry": {
@@ -2731,7 +2731,7 @@
   "band_coverage": null,
   "recent": [
    {
-    "date": "2026-09-08",
+    "date": "2026-09-09",
     "spot": 1342.6,
     "up_probability": 34.7,
     "forecast": 1342.4,
@@ -2745,82 +2745,82 @@
   "available": true,
   "items": [
    {
-    "title": "“엔화 바닥 찍었나” 전문가가 꼽은 투자처 따로 있다는데",
-    "source": "매일경제 경제",
-    "link": "https://www.mk.co.kr/news/economy/12146796",
-    "published": "2026-09-08 10:38"
-   },
-   {
-    "title": "신한은행, 퇴직연금형 개인 투자용 국채 판매",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20260908053600002",
-    "published": "2026-09-08 10:30"
-   },
-   {
-    "title": "한투증권, 퇴직연금 개인투자용 국채 출시…9일부터 청약 접수",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20260908059800008",
-    "published": "2026-09-08 10:25"
-   },
-   {
-    "title": "2분기 명목 GDP 성장률 47년 만에 최고…\"1인당 4만달러 가능성\"(종합)",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20260908014551002",
-    "published": "2026-09-08 09:48"
-   },
-   {
-    "title": "[속보] 한은 \"올해 1인당 GNI 4만달러 넘을 가능성 매우 커져\"",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20260908036700002",
-    "published": "2026-09-08 09:22"
-   },
-   {
-    "title": "한투증권 \"엔화 강세지만 급격한 엔 캐리 청산 우려할 때 아냐\"",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20260908019700008",
-    "published": "2026-09-08 08:26"
-   },
-   {
-    "title": "원유 재고 4억배럴 감소…국제유가 다시 100달러 눈앞",
+    "title": "금리인상 가시화에 엔화 강세…\"엔캐리 트레이드 이번엔 달라\"",
     "source": "한국경제",
-    "link": "https://www.hankyung.com/article/202609080069i",
-    "published": "2026-09-08 08:24"
+    "link": "https://www.hankyung.com/article/202609082236i",
+    "published": "2026-09-08 21:33"
    },
    {
-    "title": "우리금융 외국인 지분율, 사상 첫 50% 돌파…꾸준히 사들이는 이유는",
+    "title": "원화값 어디까지 올라가요?…美중간선거까진 봐야하는 이유 [백석현의 환율노트]",
     "source": "매일경제 경제",
-    "link": "https://www.mk.co.kr/news/economy/12146570",
-    "published": "2026-09-07 22:19"
+    "link": "https://www.mk.co.kr/news/economy/12147525",
+    "published": "2026-09-08 20:10"
    },
    {
-    "title": "美 '엔저 시정 압박' 통했나…6개월만에 달러당 154엔대로 하락(종합)",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20260907072651073",
-    "published": "2026-09-07 21:17"
-   },
-   {
-    "title": "원화값 두 달새 200원 치솟자 … 국민연금 환헤지 중단",
+    "title": "국민소득 4만달러 고지 보인다…명목GDP 47년만에 최고 상승률",
     "source": "매일경제 경제",
-    "link": "https://www.mk.co.kr/news/economy/12146455",
-    "published": "2026-09-07 18:01"
+    "link": "https://www.mk.co.kr/news/economy/12147459",
+    "published": "2026-09-08 19:03"
    },
    {
     "title": "[표] 외국환율고시표",
     "source": "매일경제 경제",
-    "link": "https://www.mk.co.kr/news/economy/12146337",
-    "published": "2026-09-07 17:38"
+    "link": "https://www.mk.co.kr/news/economy/12147400",
+    "published": "2026-09-08 18:04"
    },
    {
-    "title": "정부가 대주주던 우리금융 … 외국인 지분 50% 넘어섰다",
-    "source": "매일경제 경제",
-    "link": "https://www.mk.co.kr/news/economy/12146334",
-    "published": "2026-09-07 17:38"
+    "title": "반도체의 힘…올해 국민소득 4만달러 넘는다",
+    "source": "한국경제",
+    "link": "https://www.hankyung.com/article/2026090820651",
+    "published": "2026-09-08 17:58"
+   },
+   {
+    "title": "미국 '3천500억달러 초과' 대미투자 요구…정부, 한도 방어 총력",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260908150800003",
+    "published": "2026-09-08 17:43"
+   },
+   {
+    "title": "엔화 강세에도 유가 상승 등에 환율 상승…1,345.6원",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260908128900002",
+    "published": "2026-09-08 15:56"
+   },
+   {
+    "title": "브렌트유 다시 100달러 육박…호르무즈 긴장 고조",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260908125300009",
+    "published": "2026-09-08 15:38"
+   },
+   {
+    "title": "[외환] 원/달러 환율 5.1원 오른 1,345.6원(15:30 기준가)",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260908124200002",
+    "published": "2026-09-08 15:30"
+   },
+   {
+    "title": "고양시, 내년 외국인 계절근로자 고용 희망 농가 모집",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260908118700060",
+    "published": "2026-09-08 15:29"
+   },
+   {
+    "title": "엔/달러 환율 장중 152엔대까지 하락…엔화가치 7개월 만에 최고",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260908086300073",
+    "published": "2026-09-08 12:34"
+   },
+   {
+    "title": "마스턴운용, 서울투자진흥재단과 외국인 투자유치 활성화 MOU",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20260908078600008",
+    "published": "2026-09-08 11:32"
    }
   ],
-  "collected_at": "2026-09-08 10:56",
+  "collected_at": "2026-09-09 02:18",
   "sources_ok": [
-   "연합뉴스 경제(6)",
-   "한국경제(1)",
+   "연합뉴스 경제(12)",
+   "한국경제(2)",
    "매일경제 경제(8)"
   ],
   "sources_failed": [
@@ -2830,10 +2830,10 @@
   "note": "환율 관련 키워드가 제목에 포함된 기사만 모았습니다. 기사와 환율 움직임 사이에 인과관계가 있다는 뜻은 아닙니다."
  },
  "meta": {
-  "generated_at": "2026-09-08T10:55:55.833981+09:00",
-  "generated_at_display": "2026-09-08 10:55 KST",
+  "generated_at": "2026-09-09T02:18:41.050476+09:00",
+  "generated_at_display": "2026-09-09 02:18 KST",
   "mode": "live",
-  "elapsed_sec": 12.44,
+  "elapsed_sec": 12.41,
   "forecast_months": 12,
   "mc_simulations": 5000
  }
