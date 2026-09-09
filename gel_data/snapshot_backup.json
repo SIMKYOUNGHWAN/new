@@ -9689,7 +9689,7 @@
     "published": "2026-09-07 15:58"
    }
   ],
-  "collected_at": "2026-09-09 13:27",
+  "collected_at": "2026-09-09 13:31",
   "sources_ok": [
    "Civil.ge(3)"
   ],
@@ -9702,10 +9702,10 @@
   "note": "환율 관련 키워드가 제목에 포함된 기사만 모았습니다. 기사와 환율 움직임 사이에 인과관계가 있다는 뜻은 아닙니다."
  },
  "meta": {
-  "generated_at": "2026-09-09T13:27:01.160400+04:00",
-  "generated_at_display": "2026-09-09 13:27 트빌리시",
+  "generated_at": "2026-09-09T13:31:50.495046+04:00",
+  "generated_at_display": "2026-09-09 13:31 트빌리시",
   "mode": "sample",
-  "elapsed_sec": 1.54,
+  "elapsed_sec": 1.59,
   "forecast_months": 12,
   "mc_simulations": 5000
  }
