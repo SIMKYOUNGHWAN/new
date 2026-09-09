@@ -30,9 +30,9 @@ jobs:
           ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python -m app.pipeline --force
-      - name: 스냅샷 커밋
+      - name: 스냅샷과 예측 이력 커밋
         run: |
-          if git diff --quiet -- data/snapshot.json data/predictions.json; then
+          if ! git status --porcelain -- data/snapshot.json data/snapshot_backup.json data/predictions.json | grep -q .; then
             echo "변경 없음 - 커밋을 건너뜁니다."
             exit 0
           fi
