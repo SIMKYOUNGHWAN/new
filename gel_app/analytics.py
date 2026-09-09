@@ -77,7 +77,7 @@ def scenario_bands(px: pd.Series, months: int) -> dict:
 
 
 # ---------------------------------------------------------------- ARIMA
-def arima_forecast(px: pd.Series, months: int) -> dict:
+def arima_forecast(px: pd.Series, months: int, allow_seasonal: bool = True) -> dict:
     """라리는 관광 성수기 계절성이 뚜렷해 SARIMA 를 먼저 시도한다."""
     m = monthly(px)
     if HAS_STATSMODELS and len(m) >= 30:
@@ -86,9 +86,13 @@ def arima_forecast(px: pd.Series, months: int) -> dict:
             ((1, 1, 1), (1, 0, 1, 12), "SARIMA(1,1,1)(1,0,1)[12]"),
             ((1, 1, 1), (0, 0, 0, 0), "ARIMA(1,1,1)"),
         ):
+            if not allow_seasonal and seasonal != (0, 0, 0, 0):
+                continue
             try:
                 model = ARIMA(m.values, order=order,
                               seasonal_order=seasonal).fit()
+                if not model.mle_retvals.get("converged", True):
+                    continue
                 fc = model.get_forecast(steps=months)
                 ci = fc.conf_int(alpha=0.20)      # 80% 구간
                 return {
@@ -380,7 +384,10 @@ def currency_crosses(raw: dict[str, pd.Series]) -> dict[str, dict]:
         ("gbpgel", "GBP", "USD/GBP", 4),
         ("jpygel", "JPY", "USD/JPY", 3),
     ):
-        joined = pd.concat([usd, raw[key].rename(key)], axis=1).dropna()
+        if key not in raw:
+            continue
+        joined = pd.concat([usd, raw[key].rename(key)], axis=1).dropna().sort_index()
+        joined = joined[np.isfinite(joined).all(axis=1) & (joined > 0).all(axis=1)]
         if joined.empty:
             continue
         # GEL/외화와 GEL/USD의 비율은 외화/USD, 즉 USD/외화 환율이다.
@@ -391,7 +398,31 @@ def currency_crosses(raw: dict[str, pd.Series]) -> dict[str, dict]:
             "values": np.round(values.values[-250:], digits).tolist(),
             "digits": digits,
         }
+        # Fit each currency on its own full history, not the 250-point chart tail.
+        out[code]["analysis"] = cross_analysis(values)
     return out
+
+
+def cross_analysis(px: pd.Series) -> dict:
+    """통화별 분석. 마지막 미완료 월은 월간 모델 학습에서 제외한다."""
+    m = monthly(px)
+    cutoff = px.index[-1].normalize() + pd.offsets.MonthEnd(0)
+    complete = px if px.index[-1].normalize() == cutoff else px[px.index < px.index[-1].replace(day=1).normalize()]
+    result = {"available": False, "observations": len(px),
+              "history": {"labels": [d.strftime("%Y-%m") for d in m.index], "values": m.round(6).tolist()},
+              "bollinger": bollinger(px)}
+    if len(monthly(complete)) < 30:
+        result["reason"] = "완료된 월 데이터가 30개월 이상 쌓이면 심화 분석이 제공됩니다."
+        return result
+    result.update({"available": True,
+                   "model_as_of": complete.index[-1].strftime("%Y-%m-%d"),
+                   "scenario": scenario_bands(complete, 12),
+                   "arima": arima_forecast(complete, 12, allow_seasonal=False),
+                   "garch": garch_volatility(px),
+                   "seasonality": seasonality(complete),
+                   "monte_carlo": monte_carlo(complete, 12, config.MC_SIMULATIONS),
+                   "backtest": backtest(complete)})
+    return result
 
 
 def build_snapshot(raw: dict[str, pd.Series]) -> dict:
