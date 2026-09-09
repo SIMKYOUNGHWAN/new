@@ -1,12 +1,12 @@
 [
  {
   "date": "2026-09-09",
-  "spot": 1342.6,
-  "up_probability": 34.7,
+  "spot": 1341.1,
+  "up_probability": 33.6,
   "best_model": "LightGBM",
-  "forecast_1m_median": 1342.4,
-  "forecast_1m_lower": 1279.9,
-  "forecast_1m_upper": 1408.4,
+  "forecast_1m_median": 1340.8,
+  "forecast_1m_lower": 1278.4,
+  "forecast_1m_upper": 1406.9,
   "actual_1m": null,
   "direction_correct": null,
   "within_band": null
