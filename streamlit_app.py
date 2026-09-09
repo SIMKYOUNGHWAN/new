@@ -4,6 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="환율 대시보드", page_icon="💱", layout="wide", initial_sidebar_state="expanded")
 
 navigation = st.navigation([
+    st.Page("dashboard_pages/overview.py", title="글로벌 환율 종합", icon="🌐"),
     st.Page("dashboard_pages/krw.py", title="대한민국 원화", icon="🇰🇷", default=True),
     st.Page("dashboard_pages/gel.py", title="조지아 라리화", icon="🇬🇪"),
     st.Page("dashboard_pages/cny.py", title="중국 위안화", icon="🇨🇳"),
@@ -13,5 +14,7 @@ navigation = st.navigation([
 ])
 st.sidebar.caption("라리: NBG 공식 환율 · 주요 4통화: ECB 기준환율")
 navigation.run()
+
+
 
 
