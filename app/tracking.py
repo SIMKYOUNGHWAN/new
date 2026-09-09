@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from . import config
@@ -37,7 +37,7 @@ def _save(records: list[dict]) -> None:
     tmp.replace(HISTORY_FILE)
 
 
-def record(snapshot: dict) -> None:
+def record(snapshot: dict, actual_series=None) -> None:
     """오늘 예측을 기록한다. 같은 날짜가 있으면 덮어쓴다."""
     now = datetime.now(ZoneInfo(config.TIMEZONE))
     today = now.strftime("%Y-%m-%d")
@@ -62,15 +62,20 @@ def record(snapshot: dict) -> None:
     records.append(entry)
     records.sort(key=lambda r: r["date"])
 
-    _score(records, snapshot)
+    _score(records, actual_series)
     _save(records)
     log.info("예측 이력 기록: %s (총 %d건)", today, len(records))
 
 
-def _score(records: list[dict], snapshot: dict) -> None:
-    """한 달이 지난 예측에 실제값을 채워 채점한다."""
-    hist = snapshot.get("history", {})
-    spot_now = snapshot["summary"]["latest"]
+def _score(records: list[dict], actual_series=None) -> None:
+    """한 달 뒤의 첫 관측값으로 과거 예측을 채점한다."""
+    if actual_series is None:
+        return
+
+    series = actual_series.dropna().sort_index()
+    if series.empty:
+        return
+
     today = datetime.now(ZoneInfo(config.TIMEZONE)).date()
 
     for r in records:
@@ -81,24 +86,25 @@ def _score(records: list[dict], snapshot: dict) -> None:
         except ValueError:
             continue
 
-        # 30일이 지났으면 현재 환율을 실제값으로 본다.
-        if (today - made).days < 30:
+        target = made + timedelta(days=30)
+        if today < target:
             continue
 
-        r["actual_1m"] = spot_now
+        # 휴장일에는 목표일 이후 첫 관측치를 사용한다.
+        matches = series[series.index.date >= target]
+        if matches.empty:
+            continue
+        actual = float(matches.iloc[0])
+        r["actual_1m"] = actual
 
         if r.get("up_probability") is not None and r.get("spot"):
             predicted_up = r["up_probability"] >= 50
-            actual_up = spot_now > r["spot"]
+            actual_up = actual > r["spot"]
             r["direction_correct"] = bool(predicted_up == actual_up)
 
         lo, hi = r.get("forecast_1m_lower"), r.get("forecast_1m_upper")
         if lo is not None and hi is not None:
-            r["within_band"] = bool(lo <= spot_now <= hi)
-
-    if hist:
-        pass    # 향후 정확한 과거 일자 대조로 개선할 여지
-
+            r["within_band"] = bool(lo <= actual <= hi)
 
 def summary() -> dict:
     """대시보드에 표시할 이력 요약."""
