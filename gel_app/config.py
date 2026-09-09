@@ -42,7 +42,7 @@ FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
 # ---- 수집 범위 ----
 BASE_CURRENCY = "USD"                 # 주 통화쌍: USD/GEL
 # 함께 보여줄 통화. NBG 는 43개 통화를 공표한다.
-PEER_CURRENCIES = ["EUR", "RUB", "TRY", "AMD", "AZN"]
+PEER_CURRENCIES = ["EUR", "RUB", "TRY", "AMD", "AZN", "CNY", "GBP", "JPY"]
 HISTORY_YEARS = 3
 
 # 한 번의 배치에서 새로 호출할 최대 일수. NBG 는 날짜당 1회 호출이라

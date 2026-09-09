@@ -117,3 +117,8 @@ data/snapshot.json            커밋되는 스냅샷
 Streamlit 사이드바에서 **조지아 라리화** 페이지를 선택하면 USD/GEL 대시보드를 볼 수 있습니다. 라리화 데이터 수집은 별도 워크플로로 실행되며, 원화 대시보드 데이터와 파일을 공유하지 않습니다.
 
 실데이터를 쓰려면 GitHub Actions Variables에 `GEL_USE_SAMPLE=false`와 필요에 따라 `NBG_BACKFILL_LIMIT`을 설정하고, Secrets에 `FRED_API_KEY`를 등록하세요. NBG 환율 API는 키가 필요 없습니다. 상세 내용은 `GEL_README.md`를 참고하세요.
+
+
+## 통화별 페이지
+
+Streamlit 메뉴에서 **대한민국 원화**, **조지아 라리화**, **중국 위안화**, **유럽 유로화**, **영국 파운드화**, **일본 엔화**를 선택할 수 있습니다. 중국·유럽·영국·일본 페이지의 USD 기준 교차환율은 라리화 수집 워크플로가 NBG 고시환율에서 계산합니다.

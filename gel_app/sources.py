@@ -74,6 +74,9 @@ def sample_bundle() -> dict[str, pd.Series]:
     bundle = {
         "usdgel":     _sample_series(750, 2.70, 0.006, 0.0, "B", seed=1),
         "eurgel":     _sample_series(750, 3.10, 0.008, 0.0, "B", seed=2),
+        "cnygel":     _sample_series(750, 0.37, 0.001, 0.0, "B", seed=12),
+        "gbpgel":     _sample_series(750, 3.65, 0.010, 0.0, "B", seed=13),
+        "jpygel":     _sample_series(750, 0.018, 0.00006, 0.0, "B", seed=14),
         "rubgel":     _sample_series(750, 0.030, 0.0004, 0.0, "B", seed=3),
         "trygel":     _sample_series(750, 0.080, 0.0009, -0.00005, "B", seed=4),
         "amdgel":     _sample_series(750, 0.0070, 0.00005, 0.0, "B", seed=5),
@@ -101,6 +104,7 @@ def sample_bundle() -> dict[str, pd.Series]:
 CURRENCY_KEYS = {
     "USD": "usdgel", "EUR": "eurgel", "RUB": "rubgel",
     "TRY": "trygel", "AMD": "amdgel", "AZN": "azngel",
+    "CNY": "cnygel", "GBP": "gbpgel", "JPY": "jpygel",
 }
 
 

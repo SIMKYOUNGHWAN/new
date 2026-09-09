@@ -370,6 +370,30 @@ def bollinger(px: pd.Series, window: int = 20, k: float = 2.0) -> dict:
 
 
 # ---------------------------------------------------------------- 전체 실행
+def currency_crosses(raw: dict[str, pd.Series]) -> dict[str, dict]:
+    """NBG의 GEL 기준 환율을 USD 기준 주요 통화 교차환율로 변환한다."""
+    usd = raw["usdgel"].rename("usdgel")
+    out = {}
+    for key, code, pair, digits in (
+        ("cnygel", "CNY", "USD/CNY", 4),
+        ("eurgel", "EUR", "USD/EUR", 4),
+        ("gbpgel", "GBP", "USD/GBP", 4),
+        ("jpygel", "JPY", "USD/JPY", 3),
+    ):
+        joined = pd.concat([usd, raw[key].rename(key)], axis=1).dropna()
+        if joined.empty:
+            continue
+        # GEL/외화와 GEL/USD의 비율은 외화/USD, 즉 USD/외화 환율이다.
+        values = joined["usdgel"] / joined[key]
+        out[code] = {
+            "pair": pair,
+            "labels": [d.strftime("%Y-%m-%d") for d in values.index[-250:]],
+            "values": np.round(values.values[-250:], digits).tolist(),
+            "digits": digits,
+        }
+    return out
+
+
 def build_snapshot(raw: dict[str, pd.Series]) -> dict:
     """수집된 원자료로 모든 그래프 데이터를 계산한다."""
     sampled = raw.pop("_sampled", []) if isinstance(raw.get("_sampled"), list) else []
@@ -429,6 +453,7 @@ def build_snapshot(raw: dict[str, pd.Series]) -> dict:
         "scenario": scenario_bands(px, months),
         "bollinger": bollinger(px),
         "eurgel": _daily("eurgel", 250),
+        "crosses": currency_crosses(raw),
         # --- 전문가용: 외화 유입 ---
         "remittance": _monthly("remittance", 24),
         "tourism": _monthly("tourism", 24),
