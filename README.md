@@ -110,3 +110,10 @@ data/snapshot.json            커밋되는 스냅샷
   정교한 모델이 랜덤워크를 이기지 못하는 경우가 흔한데, 이 비교를 그대로 노출하는
   편이 과신을 막고 신뢰도에도 유리합니다.
 - 투자 자문이 아닙니다.
+
+
+## 조지아 라리화 대시보드
+
+Streamlit 사이드바에서 **조지아 라리화** 페이지를 선택하면 USD/GEL 대시보드를 볼 수 있습니다. 라리화 데이터 수집은 별도 워크플로로 실행되며, 원화 대시보드 데이터와 파일을 공유하지 않습니다.
+
+실데이터를 쓰려면 GitHub Actions Variables에 `GEL_USE_SAMPLE=false`와 필요에 따라 `NBG_BACKFILL_LIMIT`을 설정하고, Secrets에 `FRED_API_KEY`를 등록하세요. NBG 환율 API는 키가 필요 없습니다. 상세 내용은 `GEL_README.md`를 참고하세요.

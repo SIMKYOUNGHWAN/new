@@ -1,0 +1,56 @@
+name: 라리화 일간 스냅샷 갱신
+
+on:
+  schedule:
+    # NBG 는 트빌리시 17시경 공시. UTC 14:00 = 트빌리시 18:00, 평일만
+    - cron: "0 14 * * 1-5"
+  workflow_dispatch:        # 수동 실행 버튼
+
+permissions:
+  contents: write           # 스냅샷 커밋에 필요
+
+concurrency:
+  group: gel-snapshot
+  cancel-in-progress: false
+
+jobs:
+  build-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: 의존성 설치
+        run: pip install -r requirements.txt
+
+      - name: 배치 실행
+        env:
+          GEL_USE_SAMPLE: ${{ vars.GEL_USE_SAMPLE || 'true' }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          NBG_BACKFILL_LIMIT: ${{ vars.NBG_BACKFILL_LIMIT || '120' }}
+        run: python -m gel_app.pipeline --force
+
+      - name: 라리화 스냅샷과 예측 이력 커밋
+        run: |
+          if ! git status --porcelain -- gel_data/snapshot.json gel_data/snapshot_backup.json gel_data/nbg_rates.csv gel_data/predictions.json | grep -q .; then
+            echo "변경 없음 - 커밋을 건너뜁니다."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gel_data/snapshot.json gel_data/snapshot_backup.json gel_data/nbg_rates.csv gel_data/predictions.json
+          git commit -m "chore: 스냅샷 갱신 $(date -u +'%Y-%m-%d')"
+          git push
+
+      - name: 실패 알림용 요약
+        if: failure()
+        run: |
+          echo "### 배치 실패" >> $GITHUB_STEP_SUMMARY
+          echo "기존 스냅샷이 유지되므로 대시보드는 계속 동작합니다." >> $GITHUB_STEP_SUMMARY
+

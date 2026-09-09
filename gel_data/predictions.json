@@ -1,0 +1,14 @@
+[
+ {
+  "date": "2026-09-07",
+  "spot": 2.4379,
+  "up_probability": 16.2,
+  "best_model": "LightGBM",
+  "forecast_1m_median": 2.4305,
+  "forecast_1m_lower": 2.3869,
+  "forecast_1m_upper": 2.4752,
+  "actual_1m": null,
+  "direction_correct": null,
+  "within_band": null
+ }
+]
