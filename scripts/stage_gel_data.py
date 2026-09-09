@@ -4,6 +4,9 @@ import subprocess
 
 
 OUTPUTS = (
+    "gel_data/snapshot_live.json",
+    "gel_data/nbg_live_rates.csv",
+    "gel_data/predictions_live.json",
     "gel_data/snapshot.json",
     "gel_data/snapshot_backup.json",
     "gel_data/nbg_rates.csv",
@@ -26,4 +29,6 @@ def stage_outputs(root):
 if __name__ == "__main__":
     # Exit status indicates script success; the workflow separately checks changes.
     stage_outputs(Path.cwd())
+
+
 

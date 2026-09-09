@@ -29,7 +29,7 @@ def _secret(key: str, default: str = "") -> str:
     return os.getenv(key, default)
 
 
-USE_SAMPLE = _secret("GEL_USE_SAMPLE", "true").lower() == "true"
+USE_SAMPLE = _secret("GEL_USE_SAMPLE", "false").lower() == "true"
 
 # ---- 데이터 소스 ----
 # NBG 환율 API 는 인증이 필요 없다.
@@ -57,4 +57,5 @@ HISTORY_MONTHS = 36
 
 CACHE_TTL = 3600
 PRICE_DIGITS = 4   # 라리는 2.67 수준이라 소수 4자리가 필요하다
+
 

@@ -32,12 +32,11 @@ jobs:
       - name: 의존성 설치
         run: pip install -r requirements.txt
 
-      - name: 배치 실행
-        env:
-          GEL_USE_SAMPLE: ${{ vars.GEL_USE_SAMPLE || 'true' }}
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          NBG_BACKFILL_LIMIT: ${{ vars.NBG_BACKFILL_LIMIT || '120' }}
-        run: python -m gel_app.pipeline --force
+      - name: 실제 데이터 안전장치 검증
+        run: python -m unittest test_gel_live -v
+
+      - name: NBG 실제 환율·거시통계·현지 뉴스 갱신
+        run: python -m gel_app.live_pipeline
 
       - name: 라리화 스냅샷과 예측 이력 커밋
         run: |
@@ -57,4 +56,5 @@ jobs:
         run: |
           echo "### 배치 실패" >> $GITHUB_STEP_SUMMARY
           echo "기존 스냅샷이 유지되므로 대시보드는 계속 동작합니다." >> $GITHUB_STEP_SUMMARY
+
 

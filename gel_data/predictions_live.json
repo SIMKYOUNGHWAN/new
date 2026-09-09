@@ -1,0 +1,14 @@
+[
+ {
+  "date": "2026-09-09",
+  "as_of": "2026-09-09",
+  "spot": 2.6114,
+  "lower": 2.5545,
+  "median": 2.6111,
+  "upper": 2.6669,
+  "probability": 31.7,
+  "actual": null,
+  "correct": null,
+  "within_band": null
+ }
+]
