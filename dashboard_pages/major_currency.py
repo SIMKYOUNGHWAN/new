@@ -4,7 +4,7 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from gel_app import charts, pipeline
+from gel_app import charts, major_pipeline as pipeline
 
 
 def render(code: str, title: str, description: str) -> None:
@@ -12,7 +12,7 @@ def render(code: str, title: str, description: str) -> None:
     st.caption(f"{description} · 1 USD를 사는 데 필요한 {code} 금액")
     snap = pipeline.load_snapshot()
     if not snap:
-        st.error("스냅샷이 없습니다. 일간 스냅샷 배치를 실행해 주세요.")
+        st.error("실제 환율 데이터가 없습니다. 주요 통화 실제 환율 갱신 배치를 확인해 주세요.")
         return
     series = snap.get("crosses", {}).get(code, {})
     if not series.get("values"):
@@ -22,9 +22,13 @@ def render(code: str, title: str, description: str) -> None:
     fallback = snap.get("summary", {}).get("sampled_indicators", [])
     sample = sample or any(label in fallback for label in ("USD/GEL", f"{code}/GEL"))
     if sample:
-        st.warning("샘플 데이터 · 아래 환율, 전망 및 성과는 화면 시연용입니다. 실제 시장 시세가 아닙니다.")
-    else:
-        st.info("NBG 고시환율로 계산한 교차환율입니다. 실시간 거래 호가와 차이가 있습니다.")
+        st.error("실제 데이터로 검증되지 않은 스냅샷은 표시하지 않습니다.")
+        return
+    st.info("실제 데이터 · ECB 공식 기준환율입니다. 실시간 거래 호가가 아닌 일별 공시 환율입니다.")
+    st.markdown("[데이터 출처: 유럽중앙은행(ECB)](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html)")
+    age = (pd.Timestamp.now(tz="UTC").tz_localize(None).normalize() - pd.Timestamp(series["labels"][-1])).days
+    if age > 4:
+        st.warning(f"최신 공시가 {age}일 전입니다. 휴장일 또는 데이터 갱신 상태를 확인해 주세요.")
     st.caption(f"관측 기준일: {series['labels'][-1]} · 배치 갱신: {snap.get('meta', {}).get('generated_at_display', '—')}")
     st.caption(f"환율 상승 = {title} 약세 / 하락 = 강세 · 모든 가격 단위: {code}/USD")
     digits = series.get("digits", 4)
@@ -120,7 +124,7 @@ def render(code: str, title: str, description: str) -> None:
                      column_config={f"RMSE ({code}/USD)": st.column_config.NumberColumn(format="%.6f")})
         st.caption(f"마지막 {bt['test_months']}개월을 제외하고 학습한 뒤 해당 기간을 한 번에 예측한 고정 분할 검증입니다. RMSE는 작을수록 좋습니다. 앙상블은 랜덤워크·이동평균·드리프트의 평균입니다.")
         with st.expander("데이터와 계산 방법", expanded=False):
-            st.write(f"각 날짜의 (GEL/USD) ÷ (GEL/{code})로 교차환율을 계산합니다. 네 통화의 모델은 각각의 시계열로 따로 학습합니다.")
+            st.write(f"ECB 원본의 통화/EUR 환율을 USD/EUR로 나눠 1 USD당 {code} 가격을 계산합니다. EUR는 USD/EUR의 역수입니다. 네 통화의 모델은 각각의 실제 시계열로 따로 학습합니다.")
             st.write("완료되지 않은 당월은 월간 모델 학습에서 제외합니다. 일간 차트·가격 밴드·변동성은 최신 관측값까지 사용합니다.")
             st.write("실제 데이터가 부족하면 심화 분석을 보류합니다. 국가별 금리·물가 등 거시지표와 실시간 뉴스는 이 페이지에 아직 연결되어 있지 않습니다.")
             st.write("백테스트는 과거 자료 재현입니다. 일별 예측을 저장하고 미래 실제값으로 채점하는 예측 이력 기능은 이 네 통화에는 아직 제공하지 않습니다.")

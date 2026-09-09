@@ -16,7 +16,7 @@ class MajorCurrencyTests(unittest.TestCase):
         for key in ("usdgel", "cnygel", "eurgel", "gbpgel", "jpygel"):
             cls.raw[key].index = pd.date_range(end="2026-09-09", periods=len(cls.raw[key]), freq="B")
         cls.crosses = analytics.currency_crosses(cls.raw)
-        cls.snapshot = {"crosses": cls.crosses, "meta": {"mode": "sample"}, "summary": {}}
+        cls.snapshot = {"crosses": cls.crosses, "meta": {"mode": "live"}, "summary": {}}
         cls.temp = tempfile.TemporaryDirectory()
         cls.fixture = Path(cls.temp.name) / "fixture.json"
         cls.fixture.write_text(json.dumps(cls.snapshot, allow_nan=False), encoding="utf-8")
@@ -54,17 +54,16 @@ class MajorCurrencyTests(unittest.TestCase):
         for code, title in (("CNY", "중국 위안화"), ("EUR", "유럽 유로화"),
                             ("GBP", "영국 파운드화"), ("JPY", "일본 엔화")):
             app = AppTest.from_string(f'''
-import sys, types, json
+import json
+from unittest.mock import patch
 from pathlib import Path
-pipeline = types.ModuleType("gel_app.pipeline")
-pipeline.load_snapshot = lambda: json.loads(Path({str(self.fixture)!r}).read_text(encoding="utf-8"))
-sys.modules["gel_app.pipeline"] = pipeline
 from dashboard_pages.major_currency import render
-render("{code}", "{title}", "USD/{code} 환율")
+with patch("gel_app.major_pipeline.load_snapshot", return_value=json.loads(Path({str(self.fixture)!r}).read_text(encoding="utf-8"))):
+    render("{code}", "{title}", "USD/{code} 환율")
 ''').run(timeout=60)
             self.assertEqual(len(app.exception), 0, str(app.exception))
             self.assertEqual(len(app.tabs), 2)
-            self.assertEqual(len(app.warning), 1)
+            self.assertTrue(any("ECB" in item.value for item in app.info))
             self.assertGreaterEqual(len(app.get("plotly_chart")), 7)
             app.number_input[0].set_value(2000.0).run()
             self.assertEqual(len(app.exception), 0, str(app.exception))
