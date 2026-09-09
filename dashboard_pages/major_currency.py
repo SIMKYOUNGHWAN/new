@@ -85,7 +85,14 @@ def render(code: str, title: str, description: str) -> None:
         chart(charts.interval(analysis["arima"]))
         st.caption(f"사용 모델: {analysis['arima']['method']} · 음영은 모델 가정에 따른 80% 예측 구간입니다.")
         st.subheader("02 · 변동성 분석")
-        chart(charts.garch(analysis["garch"]), price=False)
+        volatility = analysis["garch"]
+        vol_fig = charts.garch(volatility)
+        last_date = pd.Timestamp(volatility["history_labels"][-1])
+        forecast_dates = pd.bdate_range(last_date + pd.offsets.BDay(1), periods=len(volatility["forecast"]))
+        # Plotly date axes cannot render the shared chart's "+1D" category labels.
+        vol_fig.data[1].x = [last_date.strftime("%Y-%m-%d")] + forecast_dates.strftime("%Y-%m-%d").tolist()
+        vol_fig.update_yaxes(title_text="연율화 변동성 (%)")
+        chart(vol_fig, price=False)
         st.caption(f"{analysis['garch']['method']} · 연율화 변동성(%) · 향후 20개 관측일 전망, 연간 252개 관측 가정")
         st.subheader("03 · 몬테카를로와 하방·상방 위험")
         chart(charts.monte_carlo(analysis["monte_carlo"]))
