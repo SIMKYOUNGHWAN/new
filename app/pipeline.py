@@ -38,7 +38,7 @@ def run_batch(force: bool = False) -> dict:
 
     # 예측 이력 기록 후 요약을 스냅샷에 실어 보낸다.
     try:
-        tracking.record(snapshot)
+        tracking.record(snapshot, raw.get("usdkrw"))
         snapshot["tracking"] = tracking.summary()
     except Exception:
         log.exception("예측 이력 기록 실패 - 배치는 계속합니다.")
