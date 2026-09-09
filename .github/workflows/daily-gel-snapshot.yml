@@ -10,7 +10,7 @@ permissions:
   contents: write           # 스냅샷 커밋에 필요
 
 concurrency:
-  group: gel-snapshot
+  group: snapshot
   cancel-in-progress: false
 
 jobs:
@@ -20,6 +20,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -46,6 +49,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "chore: 스냅샷 갱신 $(date -u +'%Y-%m-%d')"
+          git pull --rebase origin main
           git push
 
       - name: 실패 알림용 요약
