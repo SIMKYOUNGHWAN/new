@@ -11,10 +11,27 @@ from datetime import date, timedelta
 import numpy as np
 import pandas as pd
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from . import config
 
 log = logging.getLogger(__name__)
+
+# ECOS와 FRED의 일시적 연결 실패를 재시도한다.
+HTTP = requests.Session()
+HTTP.mount(
+    "https://",
+    HTTPAdapter(max_retries=Retry(
+        total=3,
+        connect=3,
+        read=3,
+        status=3,
+        backoff_factor=1,
+        status_forcelist=(429, 500, 502, 503, 504),
+        allowed_methods=frozenset({"GET"}),
+    )),
+)
 
 
 # ---------------------------------------------------------------- 실 API
@@ -26,7 +43,7 @@ def fetch_ecos(stat_code: str, item_code: str, start: str, end: str,
 
     url = (f"{config.ECOS_BASE}/{config.ECOS_API_KEY}/json/kr/1/10000/"
            f"{stat_code}/{cycle}/{start}/{end}/{item_code}")
-    resp = requests.get(url, timeout=20)
+    resp = HTTP.get(url, timeout=20)
     resp.raise_for_status()
     payload = resp.json()
 
@@ -70,7 +87,7 @@ def fetch_fred(series_id: str, start: str) -> pd.Series:
         "file_type": "json",
         "observation_start": start,
     }
-    resp = requests.get(config.FRED_BASE, params=params, timeout=20)
+    resp = HTTP.get(config.FRED_BASE, params=params, timeout=20)
     resp.raise_for_status()
     obs = resp.json().get("observations", [])
 
