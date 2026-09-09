@@ -38,13 +38,13 @@ jobs:
 
       - name: 라리화 스냅샷과 예측 이력 커밋
         run: |
-          if ! git status --porcelain -- gel_data/snapshot.json gel_data/snapshot_backup.json gel_data/nbg_rates.csv gel_data/predictions.json | grep -q .; then
+          python scripts/stage_gel_data.py
+          if git diff --cached --quiet; then
             echo "변경 없음 - 커밋을 건너뜁니다."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add gel_data/snapshot.json gel_data/snapshot_backup.json gel_data/nbg_rates.csv gel_data/predictions.json
           git commit -m "chore: 스냅샷 갱신 $(date -u +'%Y-%m-%d')"
           git push
 
