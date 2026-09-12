@@ -168,6 +168,8 @@ else:
 
 from dashboard_pages.deposits import render as render_deposits
 render_deposits(selected)
+from dashboard_pages.schd_view import render as render_schd
+render_schd(compact=True)
 
 with st.expander("최신 공시·출처 및 상세 페이지",expanded=True):
     st.dataframe(pd.DataFrame([{"통화":NAMES[c],"1 USD당 금액":daily[c].iloc[-1],"개별 최신일":str(daily[c].index[-1].date()),

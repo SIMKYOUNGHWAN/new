@@ -5,6 +5,7 @@ st.set_page_config(page_title="환율 대시보드", page_icon="💱", layout="w
 
 navigation = st.navigation([
     st.Page("dashboard_pages/overview.py", title="글로벌 환율 종합", icon="🌐"),
+    st.Page("dashboard_pages/schd.py", title="SCHD 미국 배당주", icon="📈"),
     st.Page("dashboard_pages/krw.py", title="대한민국 원화", icon="🇰🇷", default=True),
     st.Page("dashboard_pages/gel.py", title="조지아 라리화", icon="🇬🇪"),
     st.Page("dashboard_pages/cny.py", title="중국 위안화", icon="🇨🇳"),
