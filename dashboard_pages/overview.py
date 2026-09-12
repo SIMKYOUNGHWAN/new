@@ -166,6 +166,9 @@ else:
                     plot(fig,f"exchange-{code}",230)
             st.caption(f"환전 기준일 {exchange_view.index[-1]:%Y-%m-%d} · 외화 금액 = 원화 예산 × (외화/USD) ÷ (KRW/USD). 수수료·스프레드 제외. 통화별 단위가 달라 별도 축으로 표시합니다.")
 
+from dashboard_pages.deposits import render as render_deposits
+render_deposits(selected)
+
 with st.expander("최신 공시·출처 및 상세 페이지",expanded=True):
     st.dataframe(pd.DataFrame([{"통화":NAMES[c],"1 USD당 금액":daily[c].iloc[-1],"개별 최신일":str(daily[c].index[-1].date()),
                                "출처":sources[c],"일간 관측":len(daily[c])} for c in selected]),hide_index=True)
