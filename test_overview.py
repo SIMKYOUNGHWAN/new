@@ -45,7 +45,8 @@ class OverviewTests(unittest.TestCase):
     def test_real_ui_controls(self):
         app = AppTest.from_file("dashboard_pages/overview.py").run(timeout=60)
         self.assertFalse(app.exception,str(app.exception))
-        self.assertEqual(len(app.get("plotly_chart")),16)
+        self.assertIn("TRY", app.multiselect[0].value)
+        self.assertEqual(len(app.get("plotly_chart")),18)
         app.radio[0].set_value("KRW").run()
         self.assertFalse(app.exception,str(app.exception))
         app.number_input[0].set_value(2000000.).run()

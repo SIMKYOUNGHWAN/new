@@ -1,13 +1,13 @@
-"""6개 통화 통합 비교 페이지."""
+"""7개 통화 통합 비교 페이지."""
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 from dashboard_pages.overview_data import NAMES, ROUTES, load, align, strength, window, changes, forecast, convert
 
-COLORS = {"KRW":"#4C78A8","GEL":"#E45756","CNY":"#F2A541","EUR":"#54A24B","GBP":"#B279A2","JPY":"#28A6A0"}
+COLORS = {"KRW":"#4C78A8","GEL":"#E45756","CNY":"#F2A541","EUR":"#54A24B","GBP":"#B279A2","JPY":"#28A6A0","TRY":"#D56DB5"}
 st.title("🌐 글로벌 환율 종합")
-st.caption("여섯 통화의 강세·약세, 위험, 전망을 실제 공시 데이터로 비교합니다.")
+st.caption("일곱 통화의 강세·약세, 위험, 전망을 실제 공시 데이터로 비교합니다.")
 daily, monthly, sources, errors = load()
 for error in errors:
     st.warning(error)

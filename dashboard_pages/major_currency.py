@@ -124,8 +124,8 @@ def render(code: str, title: str, description: str) -> None:
                      column_config={f"RMSE ({code}/USD)": st.column_config.NumberColumn(format="%.6f")})
         st.caption(f"마지막 {bt['test_months']}개월을 제외하고 학습한 뒤 해당 기간을 한 번에 예측한 고정 분할 검증입니다. RMSE는 작을수록 좋습니다. 앙상블은 랜덤워크·이동평균·드리프트의 평균입니다.")
         with st.expander("데이터와 계산 방법", expanded=False):
-            st.write(f"ECB 원본의 통화/EUR 환율을 USD/EUR로 나눠 1 USD당 {code} 가격을 계산합니다. EUR는 USD/EUR의 역수입니다. 네 통화의 모델은 각각의 실제 시계열로 따로 학습합니다.")
+            st.write(f"ECB 원본의 통화/EUR 환율을 USD/EUR로 나눠 1 USD당 {code} 가격을 계산합니다. EUR는 USD/EUR의 역수입니다. 각 통화의 모델은 각각의 실제 시계열로 따로 학습합니다.")
             st.write("완료되지 않은 당월은 월간 모델 학습에서 제외합니다. 일간 차트·가격 밴드·변동성은 최신 관측값까지 사용합니다.")
             st.write("실제 데이터가 부족하면 심화 분석을 보류합니다. 국가별 금리·물가 등 거시지표와 실시간 뉴스는 이 페이지에 아직 연결되어 있지 않습니다.")
-            st.write("백테스트는 과거 자료 재현입니다. 일별 예측을 저장하고 미래 실제값으로 채점하는 예측 이력 기능은 이 네 통화에는 아직 제공하지 않습니다.")
+            st.write("백테스트는 과거 자료 재현입니다. 일별 예측을 저장하고 미래 실제값으로 채점하는 예측 이력 기능은 이 통화들에는 아직 제공하지 않습니다.")
 

@@ -17,14 +17,15 @@ from .analytics import cross_analysis
 
 FILE = Path(__file__).resolve().parent.parent / "major_data" / "snapshot.json"
 SOURCE = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.zip"
-CODES = ("CNY", "EUR", "GBP", "JPY")
+CODES = ("CNY", "EUR", "GBP", "JPY", "TRY")
 
 
 def parse_history(csv: bytes, now=None) -> pd.DataFrame:
     now = pd.Timestamp(now or datetime.now(timezone.utc)).tz_localize(None).normalize()
     frame = pd.read_csv(io.BytesIO(csv), parse_dates=["Date"]).set_index("Date").sort_index()
     frame = frame.loc[(frame.index >= now - pd.DateOffset(years=3)) & (frame.index <= now)]
-    frame = frame[["USD", "CNY", "GBP", "JPY"]].apply(pd.to_numeric, errors="raise")
+    quoted_codes = [code for code in CODES if code != "EUR"]
+    frame = frame[["USD", *quoted_codes]].apply(pd.to_numeric, errors="raise")
     if frame.index.has_duplicates or len(frame) < 600:
         raise ValueError("ECB 일간 환율 이력이 부족하거나 날짜가 중복되었습니다.")
     if not np.isfinite(frame.to_numpy()).all() or not (frame > 0).all().all():
@@ -32,7 +33,7 @@ def parse_history(csv: bytes, now=None) -> pd.DataFrame:
     if (now - frame.index[-1]).days > 7:
         raise ValueError("ECB 최신 공시가 7일 이상 오래되었습니다.")
     # 원본 단위는 각 통화/EUR. USD로 나누면 각 통화/USD.
-    result = frame[["CNY", "GBP", "JPY"]].div(frame["USD"], axis=0)
+    result = frame[quoted_codes].div(frame["USD"], axis=0)
     result["EUR"] = 1.0 / frame["USD"]
     return result
 

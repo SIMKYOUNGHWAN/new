@@ -6,8 +6,8 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 NAMES = {"KRW":"대한민국 원화","GEL":"조지아 라리화","CNY":"중국 위안화",
-         "EUR":"유럽 유로화","GBP":"영국 파운드화","JPY":"일본 엔화"}
-ROUTES = {"KRW":"/","GEL":"/gel","CNY":"/cny","EUR":"/eur","GBP":"/gbp","JPY":"/jpy"}
+         "EUR":"유럽 유로화","GBP":"영국 파운드화","JPY":"일본 엔화","TRY":"터키 리라"}
+ROUTES = {"KRW":"/","GEL":"/gel","CNY":"/cny","EUR":"/eur","GBP":"/gbp","JPY":"/jpy","TRY":"/try"}
 
 
 def series(labels, values):
@@ -23,7 +23,7 @@ def load(root=ROOT):
     for path, codes, source in (
         ("data/snapshot.json", ["KRW"], "기존 원화 일간 스냅샷"),
         ("gel_data/snapshot_live.json", ["GEL"], "NBG"),
-        ("major_data/snapshot.json", ["CNY","EUR","GBP","JPY"], "ECB"),
+        ("major_data/snapshot.json", ["CNY","EUR","GBP","JPY","TRY"], "ECB"),
     ):
         try:
             snap = json.loads((Path(root)/path).read_text(encoding="utf-8"))

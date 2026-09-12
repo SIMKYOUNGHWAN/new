@@ -11,8 +11,9 @@ navigation = st.navigation([
     st.Page("dashboard_pages/eur.py", title="유럽 유로화", icon="🇪🇺"),
     st.Page("dashboard_pages/gbp.py", title="영국 파운드화", icon="🇬🇧"),
     st.Page("dashboard_pages/jpy.py", title="일본 엔화", icon="🇯🇵"),
+    st.Page("dashboard_pages/try_currency.py", title="터키 리라", icon="🇹🇷", url_path="try"),
 ])
-st.sidebar.caption("라리: NBG 공식 환율 · 주요 4통화: ECB 기준환율")
+st.sidebar.caption("라리: NBG 공식 환율 · 주요 5통화: ECB 기준환율")
 navigation.run()
 
 
