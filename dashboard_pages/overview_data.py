@@ -21,7 +21,7 @@ def series(labels, values):
 def load(root=ROOT):
     daily, monthly, sources, errors = {}, {}, {}, []
     for path, codes, source in (
-        ("data/snapshot.json", ["KRW"], "기존 원화 일간 스냅샷"),
+        ("data/snapshot.json", ["KRW"], "한국은행 ECOS"),
         ("gel_data/snapshot_live.json", ["GEL"], "NBG"),
         ("major_data/snapshot.json", ["CNY","EUR","GBP","JPY","TRY"], "ECB"),
     ):

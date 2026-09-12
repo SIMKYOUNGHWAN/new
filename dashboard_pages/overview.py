@@ -16,6 +16,39 @@ if not available:
     st.error("비교할 실제 환율 데이터가 없습니다.")
     st.stop()
 selected = st.multiselect("비교할 통화", available, default=available, format_func=lambda c:NAMES[c])
+st.subheader("각국 실제 환율 · 최근 공시 기준")
+st.caption("실시간 매매·현찰 환율이 아닌 저장된 공식 관측값입니다. 원화 환산은 같은 날짜의 자료로 계산하며 은행 수수료·스프레드는 포함하지 않습니다.")
+quote_rows = []
+if "KRW" in daily:
+    krw = daily["KRW"]
+    st.metric("미국 달러 · 1 USD", f"{krw.iloc[-1]:,.2f}원")
+    st.caption(f"{krw.index[-1]:%Y-%m-%d} · 한국은행 ECOS · 1달러당 원화")
+    quote_rows.append({"통화": "미국 달러", "기준 단위": "1 USD", "원화 환산 (원)": krw.iloc[-1],
+                       "환산 기준일": str(krw.index[-1].date()), "산출·출처": "한국은행 ECOS 공시값"})
+for code in selected:
+    if code == "KRW":
+        continue
+    unit = 100 if code == "JPY" else 1
+    pair = align(daily, ["KRW", code]) if "KRW" in daily else pd.DataFrame()
+    if pair.empty:
+        quote_rows.append({"통화": NAMES[code], "기준 단위": f"{unit} {code}", "원화 환산 (원)": None,
+                           "환산 기준일": "공통 관측 없음", "산출·출처": sources[code]})
+    else:
+        last = pair.iloc[-1]
+        quote_rows.append({"통화": NAMES[code], "기준 단위": f"{unit} {code}",
+                           "원화 환산 (원)": unit * last["KRW"] / last[code],
+                           "환산 기준일": str(pair.index[-1].date()),
+                           "산출·출처": f"교차 계산 · 한국은행 ECOS + {sources[code]}"})
+if quote_rows:
+    st.dataframe(pd.DataFrame(quote_rows), hide_index=True, width="stretch",
+                 column_config={"원화 환산 (원)": st.column_config.NumberColumn(format="%.2f")})
+st.caption("외화 원화값 = 한국은행 KRW/USD ÷ 해당 통화/USD × 기준 단위. 같은 날짜에도 기관별 공시 시각이 달라 ECB 자료만으로 계산한 원화값과 차이가 날 수 있습니다. 일본 엔화는 100엔 기준입니다.")
+with st.expander("원본 환율과 출처 확인"):
+    st.dataframe(pd.DataFrame([{"통화": NAMES[c], "기준": f"1 USD = 아래 금액 {c}",
+                               "공시 금액": daily[c].iloc[-1], "최신 관측일": str(daily[c].index[-1].date()),
+                               "출처": sources[c]} for c in selected]), hide_index=True)
+    st.markdown("[한국은행 ECOS](https://ecos.bok.or.kr/) · [조지아 중앙은행 NBG](https://nbg.gov.ge/en/monetary-policy/currency) · [유럽중앙은행 ECB](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html)")
+
 a,b = st.columns(2)
 with a:
     period = st.selectbox("비교 기간",["1주","1개월","3개월"],index=2)
@@ -64,8 +97,10 @@ def lines(frame):
     return fig
 
 
-st.subheader("01 · 통화 강세·약세 비교선")
+st.subheader("01 · 통화가치 변화 지수 · 시작일 = 100")
+st.caption("아래 숫자는 환율 금액이 아닙니다. 105는 선택 기간 시작일보다 통화가치가 5% 상승했다는 뜻입니다.")
 fig = lines(indexed)
+fig.update_traces(hovertemplate="%{x|%Y-%m-%d}<br>통화가치 지수: %{y:.2f}<extra>%{fullData.name}</extra>")
 fig.add_hline(y=100,line_dash="dot",line_color="gray")
 fig.update_yaxes(title="시작점 = 100")
 plot(fig,"strength",440)
