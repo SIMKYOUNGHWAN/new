@@ -58,5 +58,17 @@
   "actual": null,
   "correct": null,
   "within_band": null
+ },
+ {
+  "date": "2026-09-16",
+  "as_of": "2026-09-16",
+  "spot": 2.6085,
+  "lower": 2.5514,
+  "median": 2.6079,
+  "upper": 2.6635,
+  "probability": 30.1,
+  "actual": null,
+  "correct": null,
+  "within_band": null
  }
 ]
