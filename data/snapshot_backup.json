@@ -956,7 +956,6 @@
  },
  "sentiment": {
   "labels": [
-   "2026-08-26",
    "2026-08-27",
    "2026-08-28",
    "2026-08-31",
@@ -985,10 +984,10 @@
    "2026-10-01",
    "2026-10-02",
    "2026-10-05",
-   "2026-10-06"
+   "2026-10-06",
+   "2026-10-07"
   ],
   "values": [
-   0.95,
    1.13,
    1.14,
    0.99,
@@ -1017,7 +1016,8 @@
    0.26,
    0.93,
    0.78,
-   1.09
+   1.09,
+   1.03
   ]
  },
  "cds": {
@@ -1059,7 +1059,7 @@
    72.0,
    67.8,
    69.2,
-   68.3
+   66.8
   ]
  },
  "carry": {
@@ -1641,7 +1641,7 @@
     -0.3,
     1.0,
     -0.31,
-    -0.11
+    -0.1
    ],
    [
     0.16,
@@ -1653,7 +1653,7 @@
    [
     -0.02,
     0.03,
-    -0.11,
+    -0.1,
     0.04,
     1.0
    ]
@@ -2733,20 +2733,12 @@
   }
  },
  "tracking": {
-  "total": 19,
+  "total": 20,
   "scored": 0,
-  "pending": 19,
+  "pending": 20,
   "direction_hit_rate": null,
   "band_coverage": null,
   "recent": [
-   {
-    "date": "2026-09-22",
-    "spot": 1384.3,
-    "up_probability": 29.5,
-    "forecast": 1385.3,
-    "actual": null,
-    "correct": null
-   },
    {
     "date": "2026-09-23",
     "spot": 1360.0,
@@ -2834,6 +2826,14 @@
     "forecast": 1338.7,
     "actual": null,
     "correct": null
+   },
+   {
+    "date": "2026-10-09",
+    "spot": 1339.2,
+    "up_probability": 31.9,
+    "forecast": 1338.7,
+    "actual": null,
+    "correct": null
    }
   ],
   "note": "예측 시점부터 30일이 지난 건만 채점합니다. 90% 밴드라면 적중 구간 비율이 90% 근처여야 정상입니다."
@@ -2842,82 +2842,82 @@
   "available": true,
   "items": [
    {
-    "title": "오뚜기, 대졸 신입·외국인 유학생 채용…오는 15일까지 접수",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008079700030",
-    "published": "2026-10-08 11:00"
-   },
-   {
-    "title": "미래에셋, 개인투자용 국채 10월 청약…\"10년물 규모 확대\"",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008065000008",
-    "published": "2026-10-08 10:27"
-   },
-   {
-    "title": "충남도, 외국인 지방세 체납자 전용보험도 압류 추진",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008056900063",
-    "published": "2026-10-08 09:53"
-   },
-   {
-    "title": "8월 경상수지 461.1억달러 흑자, 역대 2위…반도체 수출 호조(종합)",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008019551002",
-    "published": "2026-10-08 09:43"
-   },
-   {
-    "title": "[특징주] 현대차·기아, '원화 강세' 실적 우려에 연이틀 하락세",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008050300008",
-    "published": "2026-10-08 09:35"
-   },
-   {
-    "title": "한투증권 \"원/달러 환율, 1,330원대 복귀해도 추가 하락 압력\"",
-    "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008030700008",
-    "published": "2026-10-08 08:39"
-   },
-   {
-    "title": "[밤 사이 해외 뉴스 영상] \"96세 버핏도 매일 밤 본다\"…380억달러 부은 이유",
+    "title": "\"페루에 장갑차 30대 먼저\"…현대로템 20억달러 수주 승부수",
     "source": "한국경제",
-    "link": "https://www.hankyung.com/article/202610089913i",
-    "published": "2026-10-08 08:28"
+    "link": "https://www.hankyung.com/article/202610081531i",
+    "published": "2026-10-09 10:00"
    },
    {
-    "title": "8월 경상수지 461.1억달러 흑자, 역대 2위…반도체 수출 호조",
+    "title": "삼성월렛에 들어온 달러 코인…스마트폰이 해외송금 창구 된다 [스테이블코인 레이더]",
+    "source": "한국경제",
+    "link": "https://www.hankyung.com/article/202610092451i",
+    "published": "2026-10-09 09:37"
+   },
+   {
+    "title": "연중 최저가 속출 카지노주…원화 강세·관광기금 변수 여전",
     "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008019500002",
-    "published": "2026-10-08 08:00"
+    "link": "https://www.yna.co.kr/view/AKR20261008160800008",
+    "published": "2026-10-09 07:15"
    },
    {
-    "title": "[속보] 반도체 호황…8월 경상수지 461억1000만달러 흑자 역대 2위",
+    "title": "\"스위스 알프스 못지않다\"…외국인들 푹 빠진 한국 여행지",
+    "source": "한국경제",
+    "link": "https://www.hankyung.com/article/2026100816911",
+    "published": "2026-10-09 07:00"
+   },
+   {
+    "title": "엔비디아·애플도 못한 801억달러 벌고 주가 내린 삼전…월가 분석은",
+    "source": "한국경제",
+    "link": "https://www.hankyung.com/article/202610081723i",
+    "published": "2026-10-08 20:00"
+   },
+   {
+    "title": "[표] 외국환율고시표",
     "source": "매일경제 경제",
-    "link": "https://www.mk.co.kr/news/economy/12171075",
-    "published": "2026-10-08 08:00"
+    "link": "https://www.mk.co.kr/news/economy/12171851",
+    "published": "2026-10-08 17:39"
    },
    {
-    "title": "치솟은 미 국채금리…수요도 몰렸다 [오늘 아침, 당신이 알아야 할 7가지]",
-    "source": "한국경제",
-    "link": "https://www.hankyung.com/article/202610089703i",
-    "published": "2026-10-08 07:32"
+    "title": "8월 경상수지 461억弗 흑자 … 역대 2위",
+    "source": "매일경제 경제",
+    "link": "https://www.mk.co.kr/news/economy/12171845",
+    "published": "2026-10-08 17:39"
    },
    {
-    "title": "트럼프, 美주담대 급등에 \"연준, 나라 잘 안풀리길 바라는듯\"",
+    "title": "초과 세수, 기금·국채발행 축소에 얼마나…박홍근 \"협의 중\"",
     "source": "연합뉴스 경제",
-    "link": "https://www.yna.co.kr/view/AKR20261008009400071",
-    "published": "2026-10-08 06:41"
+    "link": "https://www.yna.co.kr/view/AKR20261008172300002",
+    "published": "2026-10-08 17:03"
    },
    {
-    "title": "고금리 누가 이길까…메타 '골든크로스'에 마이크론 목표가 3000달러 [박신영의 개장전 요것만]",
-    "source": "한국경제",
-    "link": "https://www.hankyung.com/article/202610079548i",
-    "published": "2026-10-07 23:36"
+    "title": "원/달러 환율 1.9원 내린 1,338.5원…박스권 등락",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20261008151700002",
+    "published": "2026-10-08 16:01"
+   },
+   {
+    "title": "[특징주] 현대차·기아, '원화 강세' 실적 우려에 연이틀 하락세(종합)",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20261008050351008",
+    "published": "2026-10-08 15:54"
+   },
+   {
+    "title": "[외환] 원/달러 환율 1.9원 내린 1,338.5원(15:30 기준가)",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20261008141800002",
+    "published": "2026-10-08 15:30"
+   },
+   {
+    "title": "양주시, 외국인 납세자에 6개국 언어 안내문 발송",
+    "source": "연합뉴스 경제",
+    "link": "https://www.yna.co.kr/view/AKR20261008138400060",
+    "published": "2026-10-08 15:23"
    }
   ],
-  "collected_at": "2026-10-08 12:26",
+  "collected_at": "2026-10-09 12:33",
   "sources_ok": [
-   "연합뉴스 경제(10)",
-   "한국경제(5)",
+   "연합뉴스 경제(8)",
+   "한국경제(4)",
    "매일경제 경제(3)"
   ],
   "sources_failed": [
@@ -2927,10 +2927,10 @@
   "note": "환율 관련 키워드가 제목에 포함된 기사만 모았습니다. 기사와 환율 움직임 사이에 인과관계가 있다는 뜻은 아닙니다."
  },
  "meta": {
-  "generated_at": "2026-10-08T12:26:51.717513+09:00",
-  "generated_at_display": "2026-10-08 12:26 KST",
+  "generated_at": "2026-10-09T12:32:54.282353+09:00",
+  "generated_at_display": "2026-10-09 12:32 KST",
   "mode": "live",
-  "elapsed_sec": 7.64,
+  "elapsed_sec": 9.08,
   "forecast_months": 12,
   "mc_simulations": 5000
  }
