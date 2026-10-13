@@ -72,9 +72,10 @@
   "median": 2.6079,
   "upper": 2.6635,
   "probability": 30.1,
-  "actual": null,
-  "correct": null,
-  "within_band": null
+  "actual": 2.5989,
+  "correct": true,
+  "within_band": true,
+  "actual_date": "2026-10-14"
  },
  {
   "date": "2026-09-17",
@@ -264,6 +265,18 @@
   "median": 2.5969,
   "upper": 2.6512,
   "probability": 30.3,
+  "actual": null,
+  "correct": null,
+  "within_band": null
+ },
+ {
+  "date": "2026-10-14",
+  "as_of": "2026-10-14",
+  "spot": 2.5989,
+  "lower": 2.5412,
+  "median": 2.5964,
+  "upper": 2.6507,
+  "probability": 30.2,
   "actual": null,
   "correct": null,
   "within_band": null
