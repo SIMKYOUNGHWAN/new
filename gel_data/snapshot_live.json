@@ -4874,7 +4874,7 @@
     0.164,
     0.094,
     0.775,
-    0.04,
+    0.039,
     0.138,
     0.134
    ],
@@ -4883,7 +4883,7 @@
     1.0,
     0.167,
     0.182,
-    -0.088,
+    -0.079,
     -0.055,
     0.096
    ],
@@ -4892,8 +4892,8 @@
     0.167,
     1.0,
     0.029,
-    -0.054,
-    -0.094,
+    -0.044,
+    -0.092,
     0.003
    ],
    [
@@ -4901,25 +4901,25 @@
     0.182,
     0.029,
     1.0,
-    0.034,
+    0.029,
     0.11,
     0.07
    ],
    [
-    0.04,
-    -0.088,
-    -0.054,
-    0.034,
+    0.039,
+    -0.079,
+    -0.044,
+    0.029,
     1.0,
-    0.399,
+    0.398,
     0.409
    ],
    [
     0.138,
     -0.055,
-    -0.094,
+    -0.092,
     0.11,
-    0.399,
+    0.398,
     1.0,
     0.371
    ],
@@ -5275,11 +5275,6 @@
    "unit": "지수",
    "frequency": "일별",
    "labels": [
-    "2025-10-03",
-    "2025-10-06",
-    "2025-10-07",
-    "2025-10-08",
-    "2025-10-09",
     "2025-10-10",
     "2025-10-14",
     "2025-10-15",
@@ -5524,14 +5519,14 @@
     "2026-09-29",
     "2026-09-30",
     "2026-10-01",
-    "2026-10-02"
+    "2026-10-02",
+    "2026-10-05",
+    "2026-10-06",
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09"
    ],
    "values": [
-    120.088,
-    120.272,
-    120.488,
-    120.777,
-    121.09,
     121.116,
     121.182,
     120.864,
@@ -5776,7 +5771,12 @@
     121.03,
     120.969,
     121.788,
-    121.385
+    121.385,
+    121.271,
+    120.898,
+    121.256,
+    121.447,
+    121.602
    ],
    "source": "FRED",
    "url": "https://fred.stlouisfed.org/series/DTWEXBGS"
@@ -5787,7 +5787,6 @@
    "unit": "지수",
    "frequency": "일별",
    "labels": [
-    "2025-10-23",
     "2025-10-24",
     "2025-10-27",
     "2025-10-28",
@@ -6036,10 +6035,10 @@
     "2026-10-07",
     "2026-10-08",
     "2026-10-09",
-    "2026-10-12"
+    "2026-10-12",
+    "2026-10-13"
    ],
    "values": [
-    17.3,
     16.37,
     15.79,
     16.42,
@@ -6288,7 +6287,8 @@
     15.08,
     15.41,
     14.84,
-    15.21
+    15.21,
+    15.27
    ],
    "source": "FRED",
    "url": "https://fred.stlouisfed.org/series/VIXCLS"
@@ -6820,6 +6820,14 @@
   "available": true,
   "items": [
    {
+    "title": "TRF 2026 in Dilijan: Tourism, Regional Cooperation and the Future of Destinations",
+    "link": "https://georgiatoday.ge/trf-2026-in-dilijan-tourism-regional-cooperation-and-the-future-of-destinations/",
+    "source": "Georgia Today",
+    "published": "2026-10-14",
+    "category": "관련 경제",
+    "timestamp": 1791936000.0
+   },
+   {
     "title": "Parliament considers granting National Bank authority to issue digital lari",
     "link": "https://georgiatoday.ge/parliament-considers-granting-national-bank-authority-to-issue-digital-lari/",
     "source": "Georgia Today",
@@ -6838,7 +6846,7 @@
     "status": "수집 성공"
    }
   ],
-  "collected_at": "2026-10-13 20:05 UTC",
+  "collected_at": "2026-10-14 18:18 UTC",
   "window_days": 30
  },
  "direction": {
@@ -6920,8 +6928,8 @@
  "meta": {
   "mode": "live",
   "source": "National Bank of Georgia",
-  "generated_at_display": "2026-10-14 00:05 트빌리시",
-  "elapsed_sec": 6.1,
+  "generated_at_display": "2026-10-14 22:18 트빌리시",
+  "elapsed_sec": 5.5,
   "failed_dates": []
  },
  "tracking": {
