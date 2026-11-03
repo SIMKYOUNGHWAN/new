@@ -406,5 +406,17 @@
   "actual_1m": null,
   "direction_correct": null,
   "within_band": null
+ },
+ {
+  "date": "2026-11-03",
+  "spot": 1341.0,
+  "up_probability": 27.2,
+  "best_model": "LightGBM",
+  "forecast_1m_median": 1342.3,
+  "forecast_1m_lower": 1282.7,
+  "forecast_1m_upper": 1405.3,
+  "actual_1m": null,
+  "direction_correct": null,
+  "within_band": null
  }
 ]
