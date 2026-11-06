@@ -964,26 +964,26 @@
    0.61
   ],
   "forecast": [
-   3777.95,
-   3777.94,
-   3777.94,
-   3777.93,
-   3777.93,
-   3777.92,
-   3777.92,
-   3777.91,
-   3777.91,
-   3777.9,
-   3777.89,
-   3777.89,
-   3777.88,
-   3777.88,
-   3777.87,
-   3777.87,
-   3777.86,
-   3777.86,
-   3777.85,
-   3777.84
+   4.17,
+   4.67,
+   4.82,
+   4.87,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89,
+   4.89
   ],
   "method": "GARCH(1,1)-t"
  },
@@ -4875,7 +4875,7 @@
     0.115,
     0.766,
     0.034,
-    0.13,
+    0.106,
     0.136
    ],
    [
@@ -4884,7 +4884,7 @@
     0.16,
     0.179,
     -0.067,
-    -0.021,
+    0.037,
     0.084
    ],
    [
@@ -4893,7 +4893,7 @@
     1.0,
     0.043,
     -0.053,
-    -0.055,
+    -0.061,
     0.02
    ],
    [
@@ -4902,7 +4902,7 @@
     0.043,
     1.0,
     0.018,
-    0.119,
+    0.116,
     0.065
    ],
    [
@@ -4915,10 +4915,10 @@
     0.379
    ],
    [
-    0.13,
-    -0.021,
-    -0.055,
-    0.119,
+    0.106,
+    0.037,
+    -0.061,
+    0.116,
     0.38,
     1.0,
     0.35
@@ -5789,7 +5789,6 @@
    "unit": "지수",
    "frequency": "일별",
    "labels": [
-    "2025-11-17",
     "2025-11-18",
     "2025-11-19",
     "2025-11-20",
@@ -6038,10 +6037,10 @@
     "2026-10-30",
     "2026-11-02",
     "2026-11-03",
-    "2026-11-04"
+    "2026-11-04",
+    "2026-11-05"
    ],
    "values": [
-    22.38,
     24.69,
     23.66,
     26.42,
@@ -6290,7 +6289,8 @@
     19.42,
     21.15,
     20.83,
-    16.61
+    16.61,
+    28.18
    ],
    "source": "FRED",
    "url": "https://fred.stlouisfed.org/series/VIXCLS"
@@ -6819,25 +6819,8 @@
   }
  },
  "news": {
-  "available": true,
-  "items": [
-   {
-    "title": "Georgia’s Annual Inflation at 5.9% in October 2026",
-    "link": "https://civil.ge/archives/756539",
-    "source": "Civil Georgia",
-    "published": "2026-11-03",
-    "category": "관련 경제",
-    "timestamp": 1793703590.0
-   },
-   {
-    "title": "Mastercard recognized for outstanding contribution to tourism development in Georgia",
-    "link": "https://georgiatoday.ge/mastercard-recognized-for-outstanding-contribution-to-tourism-development-in-georgia/",
-    "source": "Georgia Today",
-    "published": "2026-10-29",
-    "category": "관련 경제",
-    "timestamp": 1793232000.0
-   }
-  ],
+  "available": false,
+  "items": [],
   "sources": [
    {
     "source": "Civil Georgia",
@@ -6848,7 +6831,7 @@
     "status": "수집 성공"
    }
   ],
-  "collected_at": "2026-11-05 20:57 UTC",
+  "collected_at": "2026-11-06 20:15 UTC",
   "window_days": 30
  },
  "direction": {
@@ -6904,7 +6887,7 @@
   },
   "reliability": [
    {
-    "예측확률 평균": 24.43598152228835,
+    "예측확률 평균": 24.43598152228833,
     "실제 상승 비율": 50.0,
     "표본": 2
    },
@@ -6930,12 +6913,12 @@
  "meta": {
   "mode": "live",
   "source": "National Bank of Georgia",
-  "generated_at_display": "2026-11-06 00:57 트빌리시",
-  "elapsed_sec": 36.1,
+  "generated_at_display": "2026-11-07 00:15 트빌리시",
+  "elapsed_sec": 7.4,
   "failed_dates": []
  },
  "tracking": {
-  "total": 39,
+  "total": 40,
   "scored": 20,
   "direction_hit_rate": 100.0,
   "band_coverage": 100.0,
@@ -7418,6 +7401,18 @@
    },
    {
     "date": "2026-11-06",
+    "as_of": "2026-11-06",
+    "spot": 2.5955,
+    "lower": 2.5377,
+    "median": 2.5927,
+    "upper": 2.6468,
+    "probability": 21.5,
+    "actual": null,
+    "correct": null,
+    "within_band": null
+   },
+   {
+    "date": "2026-11-07",
     "as_of": "2026-11-06",
     "spot": 2.5955,
     "lower": 2.5377,
