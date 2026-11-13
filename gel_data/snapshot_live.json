@@ -4876,7 +4876,7 @@
     0.763,
     0.029,
     0.107,
-    0.136
+    0.133
    ],
    [
     0.176,
@@ -4884,8 +4884,8 @@
     0.17,
     0.174,
     -0.061,
-    0.065,
-    0.086
+    0.055,
+    0.095
    ],
    [
     0.117,
@@ -4894,7 +4894,7 @@
     0.043,
     -0.034,
     -0.064,
-    0.012
+    0.023
    ],
    [
     0.763,
@@ -4902,8 +4902,8 @@
     0.043,
     1.0,
     0.029,
-    0.119,
-    0.062
+    0.12,
+    0.072
    ],
    [
     0.029,
@@ -4912,24 +4912,24 @@
     0.029,
     1.0,
     0.354,
-    0.39
+    0.396
    ],
    [
     0.107,
-    0.065,
+    0.055,
     -0.064,
-    0.119,
+    0.12,
     0.354,
     1.0,
-    0.352
+    0.355
    ],
    [
-    0.136,
-    0.086,
-    0.012,
-    0.062,
-    0.39,
-    0.352,
+    0.133,
+    0.095,
+    0.023,
+    0.072,
+    0.396,
+    0.355,
     1.0
    ]
   ]
@@ -5095,7 +5095,8 @@
    ],
    "source": "World Bank WDI",
    "url": "https://data.worldbank.org/indicator/BX.KLT.DINV.CD.WD?locations=GE",
-   "source_updated": "2026-11-11"
+   "source_updated": "2026-11-11",
+   "refresh_failed": true
   },
   "trade_bal": {
    "available": true,
@@ -5789,7 +5790,6 @@
    "unit": "지수",
    "frequency": "일별",
    "labels": [
-    "2025-11-24",
     "2025-11-25",
     "2025-11-26",
     "2025-11-27",
@@ -6038,10 +6038,10 @@
     "2026-11-06",
     "2026-11-09",
     "2026-11-10",
-    "2026-11-11"
+    "2026-11-11",
+    "2026-11-12"
    ],
    "values": [
-    20.52,
     18.56,
     17.19,
     17.21,
@@ -6290,7 +6290,8 @@
     25.64,
     19.92,
     19.46,
-    17.49
+    17.49,
+    18.7
    ],
    "source": "FRED",
    "url": "https://fred.stlouisfed.org/series/VIXCLS"
@@ -6301,12 +6302,6 @@
    "unit": "USD/배럴",
    "frequency": "일별",
    "labels": [
-    "2025-11-04",
-    "2025-11-05",
-    "2025-11-06",
-    "2025-11-07",
-    "2025-11-10",
-    "2025-11-12",
     "2025-11-13",
     "2025-11-14",
     "2025-11-17",
@@ -6550,15 +6545,15 @@
     "2026-10-29",
     "2026-10-30",
     "2026-11-02",
-    "2026-11-03"
+    "2026-11-03",
+    "2026-11-04",
+    "2026-11-05",
+    "2026-11-06",
+    "2026-11-09",
+    "2026-11-10",
+    "2026-11-11"
    ],
    "values": [
-    61.38,
-    60.4,
-    60.24,
-    60.54,
-    60.94,
-    59.3,
     59.54,
     60.87,
     60.66,
@@ -6802,7 +6797,13 @@
     105.51,
     107.56,
     100.06,
-    99.64
+    99.64,
+    91.73,
+    94.05,
+    94.37,
+    90.4,
+    89.62,
+    89.62
    ],
    "source": "FRED",
    "url": "https://fred.stlouisfed.org/series/DCOILWTICO"
@@ -6819,17 +6820,8 @@
   }
  },
  "news": {
-  "available": true,
-  "items": [
-   {
-    "title": "Request a Personalized Exchange Rate Exclusively Through TBC Business Internet and Mobile Banking",
-    "link": "https://georgiatoday.ge/request-a-personalized-exchange-rate-exclusively-through-tbc-business-internet-and-mobile-banking/",
-    "source": "Georgia Today",
-    "published": "2026-11-09",
-    "category": "환율·통화정책",
-    "timestamp": 1794182400.0
-   }
-  ],
+  "available": false,
+  "items": [],
   "sources": [
    {
     "source": "Civil Georgia",
@@ -6840,7 +6832,7 @@
     "status": "수집 성공"
    }
   ],
-  "collected_at": "2026-11-12 21:19 UTC",
+  "collected_at": "2026-11-13 20:47 UTC",
   "window_days": 30
  },
  "direction": {
@@ -6927,12 +6919,12 @@
  "meta": {
   "mode": "live",
   "source": "National Bank of Georgia",
-  "generated_at_display": "2026-11-13 01:19 트빌리시",
-  "elapsed_sec": 7.2,
+  "generated_at_display": "2026-11-14 00:47 트빌리시",
+  "elapsed_sec": 78.4,
   "failed_dates": []
  },
  "tracking": {
-  "total": 44,
+  "total": 45,
   "scored": 25,
   "direction_hit_rate": 100.0,
   "band_coverage": 100.0,
@@ -7480,6 +7472,18 @@
    },
    {
     "date": "2026-11-13",
+    "as_of": "2026-11-13",
+    "spot": 2.5935,
+    "lower": 2.5359,
+    "median": 2.5909,
+    "upper": 2.6449,
+    "probability": 21.0,
+    "actual": null,
+    "correct": null,
+    "within_band": null
+   },
+   {
+    "date": "2026-11-14",
     "as_of": "2026-11-13",
     "spot": 2.5935,
     "lower": 2.5359,
