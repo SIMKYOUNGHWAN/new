@@ -355,9 +355,9 @@
   "forecast_1m_median": 1321.6,
   "forecast_1m_lower": 1259.9,
   "forecast_1m_upper": 1386.9,
-  "actual_1m": null,
-  "direction_correct": null,
-  "within_band": null
+  "actual_1m": 1343.9,
+  "direction_correct": false,
+  "within_band": true
  },
  {
   "date": "2026-10-28",
@@ -595,6 +595,18 @@
   "forecast_1m_median": 1345.0,
   "forecast_1m_lower": 1285.2,
   "forecast_1m_upper": 1408.1,
+  "actual_1m": null,
+  "direction_correct": null,
+  "within_band": null
+ },
+ {
+  "date": "2026-11-26",
+  "spot": 1343.9,
+  "up_probability": 29.0,
+  "best_model": "LightGBM",
+  "forecast_1m_median": 1345.3,
+  "forecast_1m_lower": 1285.5,
+  "forecast_1m_upper": 1408.4,
   "actual_1m": null,
   "direction_correct": null,
   "within_band": null
