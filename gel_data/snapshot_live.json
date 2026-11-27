@@ -4884,7 +4884,7 @@
     0.177,
     0.18,
     -0.034,
-    0.063,
+    0.058,
     0.084
    ],
    [
@@ -4893,7 +4893,7 @@
     1.0,
     0.047,
     -0.059,
-    -0.047,
+    -0.044,
     0.032
    ],
    [
@@ -4902,7 +4902,7 @@
     0.047,
     1.0,
     0.03,
-    0.119,
+    0.117,
     0.082
    ],
    [
@@ -4916,9 +4916,9 @@
    ],
    [
     0.112,
-    0.063,
-    -0.047,
-    0.119,
+    0.058,
+    -0.044,
+    0.117,
     0.365,
     1.0,
     0.368
@@ -5789,8 +5789,6 @@
    "unit": "지수",
    "frequency": "일별",
    "labels": [
-    "2025-12-05",
-    "2025-12-08",
     "2025-12-09",
     "2025-12-10",
     "2025-12-11",
@@ -6038,11 +6036,11 @@
     "2026-11-19",
     "2026-11-20",
     "2026-11-23",
-    "2026-11-24"
+    "2026-11-24",
+    "2026-11-25",
+    "2026-11-26"
    ],
    "values": [
-    15.41,
-    16.66,
     16.93,
     15.77,
     14.85,
@@ -6290,7 +6288,9 @@
     28.44,
     35.89,
     26.62,
-    26.36
+    26.36,
+    28.29,
+    26.8
    ],
    "source": "FRED",
    "url": "https://fred.stlouisfed.org/series/VIXCLS"
@@ -6822,28 +6822,20 @@
   "available": true,
   "items": [
    {
-    "title": "NBG Again Raises Minimum Threshold for Foreign Currency Loans to GEL Earners",
-    "link": "https://civil.ge/archives/761890",
-    "source": "Civil Georgia",
-    "published": "2026-11-25",
-    "category": "환율·통화정책",
-    "timestamp": 1795613073.0
-   },
-   {
-    "title": "National Bank Reports Net Purchases of USD 236 Million in Foreign Currency in October",
-    "link": "https://civil.ge/archives/761891",
-    "source": "Civil Georgia",
-    "published": "2026-11-25",
-    "category": "환율·통화정책",
-    "timestamp": 1795603618.0
-   },
-   {
     "title": "Foreign currency loans below GEL 1.5 mln to be restricted for borrowers earning in GEL",
     "link": "https://georgiatoday.ge/from-february-1-foreign-currency-loans-below-gel-1-5-million-restricted-for-borrowers-earning-in-lari/",
     "source": "Georgia Today",
     "published": "2026-11-25",
     "category": "환율·통화정책",
     "timestamp": 1795564800.0
+   },
+   {
+    "title": "Kobakhidze says abrupt intervention in casino sector would harm economy and tourism",
+    "link": "https://georgiatoday.ge/kobakhidze-says-abrupt-intervention-in-casino-sector-would-harm-economy-and-tourism/",
+    "source": "Georgia Today",
+    "published": "2026-11-24",
+    "category": "관련 경제",
+    "timestamp": 1795478400.0
    }
   ],
   "sources": [
@@ -6856,7 +6848,7 @@
     "status": "수집 성공"
    }
   ],
-  "collected_at": "2026-11-26 22:49 UTC",
+  "collected_at": "2026-11-27 22:30 UTC",
   "window_days": 30
  },
  "direction": {
@@ -6912,12 +6904,12 @@
   },
   "reliability": [
    {
-    "예측확률 평균": 23.60286743492457,
+    "예측확률 평균": 23.602867434924267,
     "실제 상승 비율": 50.0,
     "표본": 2
    },
    {
-    "예측확률 평균": 30.766792897129452,
+    "예측확률 평균": 30.766792897129353,
     "실제 상승 비율": 0.0,
     "표본": 9
    }
@@ -6938,12 +6930,12 @@
  "meta": {
   "mode": "live",
   "source": "National Bank of Georgia",
-  "generated_at_display": "2026-11-27 02:49 트빌리시",
-  "elapsed_sec": 4.6,
+  "generated_at_display": "2026-11-28 02:30 트빌리시",
+  "elapsed_sec": 7.4,
   "failed_dates": []
  },
  "tracking": {
-  "total": 54,
+  "total": 55,
   "scored": 34,
   "direction_hit_rate": 100.0,
   "band_coverage": 100.0,
@@ -7620,6 +7612,18 @@
    },
    {
     "date": "2026-11-27",
+    "as_of": "2026-11-27",
+    "spot": 2.5917,
+    "lower": 2.5338,
+    "median": 2.5886,
+    "upper": 2.6425,
+    "probability": 21.7,
+    "actual": null,
+    "correct": null,
+    "within_band": null
+   },
+   {
+    "date": "2026-11-28",
     "as_of": "2026-11-27",
     "spot": 2.5917,
     "lower": 2.5338,
